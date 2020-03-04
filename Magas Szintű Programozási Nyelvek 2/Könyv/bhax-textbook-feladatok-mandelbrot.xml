@@ -1,0 +1,731 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Mandelbrot!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>A Mandelbrot halmaz</title>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Mandelbrot/Mandelbrot.cpp">Mandelbrot halmaz</link>
+        </para>
+        
+        
+        <para>
+        <programlisting language="c++"><![CDATA[
+            #include <png++/png.hpp>
+
+            #define N 500
+            #define M 500
+            #define MAXX 0.7
+            #define MINX -2.0
+            #define MAXY 1.35
+            #define MINY -1.35
+
+            void GeneratePNG(int tomb[N][M])
+             {
+             png::image<png::rgb_pixel> image(N, M);
+
+             for (int x = 0; x < N; ++x)
+              {
+              for (int y = 0; y < M; ++y)
+               {
+               image[x][y] = png::rgb_pixel(tomb[x][y], tomb[x][y], tomb[x][y]);
+               }
+              }
+              image.write("kép.png");
+             }
+
+            struct Komplex
+             {
+             double re, im;
+             };
+
+
+            int main()
+             {
+             int tomb[N][M];
+             int i, j, k;
+             double dx = (MAXX - MINX) / N;
+             double dy = (MAXY - MINY) / M;
+
+             struct Komplex C, Z, Zuj;
+             int iteracio;
+
+             for (i = 0; i < M; ++i)
+              {
+              for (j = 0; j < N; ++j)
+               {
+               C.re = MINX + j * dx;
+               C.im = MAXY - i * dy;
+               Z.re = 0;
+               Z.im = 0;
+               iteracio = 0;
+
+               while (Z.re * Z.re + Z.im * Z.im < 4 && iteracio++ < 255)
+                {
+                Zuj.re = Z.re * Z.re - Z.im * Z.im + C.re;
+                Zuj.im = 2 * Z.re * Z.im + C.im;
+                Z.re = Zuj.re;
+                Z.im = Zuj.im;
+                }
+               tomb[i][j] = 256 - iteracio;
+               }
+              }
+
+             GeneratePNG(tomb);
+             return 0;
+             }
+
+        ]]></programlisting>
+        </para>
+        
+        
+        <para>
+            Ez a halmaz <link xlink:href="https://hu.wikipedia.org/wiki/Beno%C3%AEt_Mandelbrot"> Benoît Mandelbrot</link>-ról lett elnevezve, röviden a Mandelbrot-halmaz definíciója az az, hogy a Mandelbrot-halmaznak csak azok a C komplex számok az elemei amelyekben ez a sorozat nullához tart: Z0:=C   Zi+1:=Zi*Zi+C. Minél magasabb az iterációk száma annál nagyobb lesz a részletgazdagság. Akinek van egy kevés ideje, az mindenképpen tegye meg, és nagyítson bele az így kapott képbe, nagyon sok időt el lehet ezzel "pazarolni". Látni fogjuk mire gondolok a következő feladatokban, amikor is egy nagyítót fogunk majd létrehozni.
+        </para>
+        <para>Mandelbrot halmaz a komplex síkon:
+            </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref= "./pic/mandel.png" />
+            </imageobject>
+        </mediaobject>
+        <para>A programunk működése nagyon egyszerű mivel megvan a fentebb említett egyenletünk, erre megadunk egy halmazt és a program végigmegy az általunk megadott halmazon és az erre illeszkedő pixeleket pedig egy színnel kiszinezi.
+        </para>
+    </section>        
+        
+    <section>
+        <title>A Mandelbrot halmaz a <filename>std::complex</filename> osztállyal</title>
+        <para>
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Mandelbrot/Mandelbrot(std::complex).cpp">Mandelbrot halmaz std::complex osztállyal</link>
+        </para>
+        
+        
+        <para>
+        <programlisting language= "c++"><![CDATA[
+            #include <iostream>
+            #include "png++/png.hpp"
+            #include <complex>
+
+            int
+            main ( int argc, char *argv[] )
+            {
+
+              int szelesseg = 1920;
+              int magassag = 1080;
+              int iteraciosHatar = 255;
+              double a = -1.9;
+              double b = 0.7;
+              double c = -1.3;
+              double d = 1.3;
+
+              if ( argc == 9 )
+                {
+                  szelesseg = atoi ( argv[2] );
+                  magassag =  atoi ( argv[3] );
+                  iteraciosHatar =  atoi ( argv[4] );
+                  a = atof ( argv[5] );
+                  b = atof ( argv[6] );
+                  c = atof ( argv[7] );
+                  d = atof ( argv[8] );
+                }
+              else
+                {
+                  std::cout << "Hasznalat: ./3.1.2 fajlnev szelesseg magassag n a b c d" << std::endl;
+                  return -1;
+                }
+
+              png::image < png::rgb_pixel > kep ( szelesseg, magassag );
+
+              double dx = ( b - a ) / szelesseg;
+              double dy = ( d - c ) / magassag;
+              double reC, imC, reZ, imZ;
+              int iteracio = 0;
+
+              std::cout << "Szamitas\n";
+
+              // j megy a sorokon
+              for ( int j = 0; j < magassag; ++j )
+                {
+                  // k megy az oszlopokon
+
+                  for ( int k = 0; k < szelesseg; ++k )
+                    {
+
+                      // c = (reC, imC) a halo racspontjainak
+                      // megfelelo komplex szam
+
+                      reC = a + k * dx;
+                      imC = d - j * dy;
+                      std::complex<double> c ( reC, imC );
+
+                      std::complex<double> z_n ( 0, 0 );
+                      iteracio = 0;
+
+                      while ( std::abs ( z_n ) < 4 && iteracio < iteraciosHatar )
+                        {
+                          z_n = z_n * z_n + c;
+
+                          ++iteracio;
+                        }
+
+                      kep.set_pixel ( k, j,
+                                      png::rgb_pixel ( iteracio%255, (iteracio*iteracio)%255, 0 ) );
+                    }
+
+                  int szazalek = ( double ) j / ( double ) magassag * 100.0;
+                  std::cout << "\r" << szazalek << "%" << std::flush;
+                }
+
+              kep.write ( argv[1] );
+              std::cout << "\r" << argv[1] << " mentve." << std::endl;
+
+            }
+
+        ]]></programlisting>
+        </para>
+        
+        
+        <para>
+            Ez a forráskód tulajdonképpen ugyan azt csinálja mint az előző, azzal a különbséggel, hogy az előző példában a "header"-ben definiálnunk kellett a függvényeket, itt pedig egy egyszerű <function>#include complex</function> parancsorral, meg is tudjuk tenni ugyan azt. Ugyan úgy mint az előző feladatban, a Mandelbrot-halmazt egy komplex számsíkon ha ábrázoljuk akkor egy nevezetes fraktálalakzatot kapunk.
+        </para>
+    </section>        
+                
+    <section>
+        <title>Biomorfok</title>
+        <para>
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/IJMbgRzY76E">https://youtu.be/IJMbgRzY76E</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Biomorf">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Biomorf</link>
+        </para>
+        <para>
+            A Biomorfok nagyon szoros kapcsolatban állnak a Mandelbrot-halmazzal. A forráskódok lefuttatása után észrevehető, hogy míg a Mandelbrot-halmazban fekete-fehér képet kapunk, addig itt szineset, amit a forráskódban a RGB színkódokkal tudunk elérni. Egyből az első képen észrevehető, hogy nem teljesen olyan mint az előző porgramunk, mivel a most kapott ".png" képünk az szines, ez pedig azért lehetséges mivel teljesen más egyenlettel és képlettel dolgozunk. Valamint a pixeleket RGB színkód segítségével szinezzük.
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref= "./pic/bmorf.png" scale="60" />
+            </imageobject>
+        </mediaobject>
+    </section>                     
+
+    <section>
+        <title>A Mandelbrot halmaz CUDA megvalósítása</title>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/gvaqijHlRUs">https://youtu.be/gvaqijHlRUs</link>
+        </para>
+
+        <para>
+            Megoldás forrása:  <link xlink:href="https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/CUDA/mandelpngc_60x60_100.cu">CUDA</link>
+        </para>
+        <para>
+            A CUDA az NVidia kártyáknak a programozói interfésze, amit valójában párhuzamos számításokhoz lehet felhasználni. Ha NVidia kártyával rendelkezünk, akkor nagyon sok terhet le tudunk venni a CPU válláról.
+        </para>
+        <programlisting>
+            <![CDATA[
+                // mandelpngc_60x60_100.cu
+                // Copyright (C) 2019
+                // Norbert Bátfai, batfai.norbert@inf.unideb.hu
+                //
+                //  This program is free software: you can redistribute it and/or modify
+                //  it under the terms of the GNU General Public License as published by
+                //  the Free Software Foundation, either version 3 of the License, or
+                //  (at your option) any later version.
+                //
+                //  This program is distributed in the hope that it will be useful,
+                //  but WITHOUT ANY WARRANTY; without even the implied warranty of
+                //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                //  GNU General Public License for more details.
+                //
+                //  You should have received a copy of the GNU General Public License
+                //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+                //
+                // Version history
+                //
+                //  Mandelbrot png
+                //  Programozó Páternoszter/PARP
+                //   https://www.tankonyvtar.hu/hu/tartalom/tamop412A/2011-0063_01_parhuzamos_prog_linux
+                //
+                //  https://youtu.be/gvaqijHlRUs
+                //
+                
+                #include <png++/image.hpp>
+                #include <png++/rgb_pixel.hpp>
+                
+                #include <sys/times.h>
+                #include <iostream>
+                
+                
+                #define MERET 600
+                #define ITER_HAT 32000
+                
+                __device__ int
+                mandel (int k, int j)
+                {
+                // Végigzongorázza a CUDA a szélesség x magasság rácsot:
+                // most eppen a j. sor k. oszlopaban vagyunk
+                
+                // számítás adatai
+                float a = -2.0, b = .7, c = -1.35, d = 1.35;
+                int szelesseg = MERET, magassag = MERET, iteraciosHatar = ITER_HAT;
+                
+                // a számítás
+                float dx = (b - a) / szelesseg;
+                float dy = (d - c) / magassag;
+                float reC, imC, reZ, imZ, ujreZ, ujimZ;
+                // Hány iterációt csináltunk?
+                int iteracio = 0;
+                
+                // c = (reC, imC) a rács csomópontjainak
+                // megfelelő komplex szám
+                reC = a + k * dx;
+                imC = d - j * dy;
+                // z_0 = 0 = (reZ, imZ)
+                reZ = 0.0;
+                imZ = 0.0;
+                iteracio = 0;
+                // z_{n+1} = z_n * z_n + c iterációk
+                // számítása, amíg |z_n| < 2 vagy még
+                // nem értük el a 255 iterációt, ha
+                // viszont elértük, akkor úgy vesszük,
+                // hogy a kiinduláci c komplex számra
+                // az iteráció konvergens, azaz a c a
+                // Mandelbrot halmaz eleme
+                while (reZ * reZ + imZ * imZ < 4 && iteracio < iteraciosHatar)
+                {
+                // z_{n+1} = z_n * z_n + c
+                ujreZ = reZ * reZ - imZ * imZ + reC;
+                ujimZ = 2 * reZ * imZ + imC;
+                reZ = ujreZ;
+                imZ = ujimZ;
+                
+                ++iteracio;
+                
+                }
+                return iteracio;
+                }
+                
+                
+                /*
+                __global__ void
+                mandelkernel (int *kepadat)
+                {
+                
+                int j = blockIdx.x;
+                int k = blockIdx.y;
+                
+                kepadat[j + k * MERET] = mandel (j, k);
+                
+                }
+                */
+                
+                __global__ void
+                mandelkernel (int *kepadat)
+                {
+                
+                int tj = threadIdx.x;
+                int tk = threadIdx.y;
+                
+                int j = blockIdx.x * 10 + tj;
+                int k = blockIdx.y * 10 + tk;
+                
+                kepadat[j + k * MERET] = mandel (j, k);
+                
+                }
+                
+                void
+                cudamandel (int kepadat[MERET][MERET])
+                {
+                
+                int *device_kepadat;
+                cudaMalloc ((void **) &device_kepadat, MERET * MERET * sizeof (int));
+                
+                // dim3 grid (MERET, MERET);
+                // mandelkernel <<< grid, 1 >>> (device_kepadat);
+                
+                dim3 grid (MERET / 10, MERET / 10);
+                dim3 tgrid (10, 10);
+                mandelkernel <<< grid, tgrid >>> (device_kepadat);
+                
+                cudaMemcpy (kepadat, device_kepadat,
+                MERET * MERET * sizeof (int), cudaMemcpyDeviceToHost);
+                cudaFree (device_kepadat);
+                
+                }
+                
+                int
+                main (int argc, char *argv[])
+                {
+                
+                // Mérünk időt (PP 64)
+                clock_t delta = clock ();
+                // Mérünk időt (PP 66)
+                struct tms tmsbuf1, tmsbuf2;
+                times (&tmsbuf1);
+                
+                if (argc != 2)
+                {
+                std::cout << "Hasznalat: ./mandelpngc fajlnev";
+                return -1;
+                }
+                
+                int kepadat[MERET][MERET];
+                
+                cudamandel (kepadat);
+                
+                png::image < png::rgb_pixel > kep (MERET, MERET);
+                
+                for (int j = 0; j < MERET; ++j)
+                {
+                //sor = j;
+                for (int k = 0; k < MERET; ++k)
+                {
+                kep.set_pixel (k, j,
+                png::rgb_pixel (255 -
+                (255 * kepadat[j][k]) / ITER_HAT,
+                255 -
+                (255 * kepadat[j][k]) / ITER_HAT,
+                255 -
+                (255 * kepadat[j][k]) / ITER_HAT));
+                }
+                }
+                kep.write (argv[1]);
+                
+                std::cout << argv[1] << " mentve" << std::endl;
+                
+                times (&tmsbuf2);
+                std::cout << tmsbuf2.tms_utime - tmsbuf1.tms_utime
+                + tmsbuf2.tms_stime - tmsbuf1.tms_stime << std::endl;
+                
+                delta = clock () - delta;
+                std::cout << (float) delta / CLOCKS_PER_SEC << " sec" << std::endl;
+                
+                }
+
+               
+            ]]>
+            </programlisting>
+    <para>
+        Az alábbi forráskódot megtekintve észrevehetjük, hogy most egy CUDA féle API-n belül dolgozunk. Észrevehetjük, hogy itt azért jelennek meg új dolgok mint pl. __global__ stb. Ezzel például a Kernel rendelkezik. Az ilyen "minősítők" ugyan olyan minősítők mint példáual amikor egy változót úgy adunk meg, hogy "unsigned short int a".
+    </para>
+    <para>Ahhoz, hogy egy ilyen forráskódot fordítani és futtatni tudjunk, szükségünk lesz értelemszerűen egy CUDA-t támogató kártyára és magára a CUDA-ra aminek telepítve kell lennie a számítógépünkön. Viszont amikor ezekkel az előfeltételekkel fordítjuk és futtatjuk a programunkat akkor megkapjuk a Mandelbrot halmaz képet, ahogyan ezt az előző feladatokban már megszokhattuk.
+    </para>
+    </section>
+
+    <section>
+        <title>Mandelbrot nagyító és utazó C++ nyelven</title>
+        <para>
+            Építs GUI-t a Mandelbrot algoritmusra, lehessen egérrel nagyítani egy területet, illetve egy pontot
+            egérrel kiválasztva vizualizálja onnan a komplex iteréció bejárta z<subscript>n</subscript> komplex számokat!
+        </para>
+
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Mandelbrot/Mandelbrot(nagy%C3%ADt%C3%B3%2Cutaz%C3%B3).cpp">Mandelbrot nagyító és utazó C++ nyelven</link>
+        </para>
+        
+        
+        <para>
+        <programlisting><![CDATA[
+
+            #include "SFML/Graphics.hpp"
+
+            //resolution of the window
+            const int width = 1280;
+            const int height = 720;
+
+            //used for complex numbers
+            struct complex_number
+            {
+                long double real;
+                long double imaginary;
+            };
+
+            void generate_mandelbrot_set(sf::VertexArray& vertexarray, int pixel_shift_x, int pixel_shift_y, int precision, float zoom)
+            {
+                #pragma omp parallel for
+                for(int i = 0; i < height; i++)
+                {
+                    for (int j = 0; j < width; j++)
+                    {
+                       
+                        long double x = ((long double)j - pixel_shift_x) / zoom;
+                        long double y = ((long double)i - pixel_shift_y) / zoom;
+                        complex_number c;
+                        c.real = x;
+                        c.imaginary = y;
+                        complex_number z = c;
+                        int iterations = 0;
+                        for (int k = 0; k < precision; k++)
+                        {
+                            complex_number z2;
+                            z2.real = z.real * z.real - z.imaginary * z.imaginary;
+                            z2.imaginary = 2 * z.real * z.imaginary;
+                            z2.real += c.real;
+                            z2.imaginary += c.imaginary;
+                            z = z2;
+                            iterations++;
+                            if (z.real * z.real + z.imaginary * z.imaginary > 4)
+                                break;
+                        }
+                     
+                        if (iterations < precision / 4.0f)
+                        {
+                            vertexarray[i*width + j].position = sf::Vector2f(j, i);
+                            sf::Color color(iterations * 255.0f / (precision / 4.0f), 0, 0);
+                            vertexarray[i*width + j].color = color;
+                        }
+                        else if (iterations < precision / 2.0f)
+                        {
+                            vertexarray[i*width + j].position = sf::Vector2f(j, i);
+                            sf::Color color(0, iterations * 255.0f / (precision / 2.0f), 0);
+                            vertexarray[i*width + j].color = color;
+                        }
+                        else if (iterations < precision)
+                        {
+                            vertexarray[i*width + j].position = sf::Vector2f(j, i);
+                            sf::Color color(0, 0, iterations * 255.0f / precision);
+                            vertexarray[i*width + j].color = color;
+                        }
+                    }
+                }
+            }
+
+            int main()
+            {
+                sf::String title_string = "Mandelbrot Set Plotter"; /
+                sf::RenderWindow window(sf::VideoMode(width, height), title_string);
+                window.setFramerateLimit(30);
+                sf::VertexArray pointmap(sf::Points, width * height);
+                
+
+
+                float zoom = 300.0f;
+                int precision = 100;
+                int x_shift = width / 2;
+                int y_shift = height / 2;
+                
+
+                generate_mandelbrot_set(pointmap, x_shift, y_shift, precision, zoom);
+                
+                
+                /**
+                 *
+                 *
+                 *
+                 *
+                 * */
+                while (window.isOpen())
+                {
+
+                    
+                    sf::Event event;
+                    while (window.pollEvent(event))
+                    {
+                        if (event.type == sf::Event::Closed)
+                            window.close();
+                    }
+                   
+                    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                    {
+                        sf::Vector2i position = sf::Mouse::getPosition(window);
+                        x_shift -= position.x - x_shift;
+                        y_shift -= position.y - y_shift;
+                        zoom *= 2;
+                        precision += 200;
+                        
+                        #pragma omp parallel for
+                        for (int i = 0; i < width*height; i++)
+                        {
+                            pointmap[i].color = sf::Color::Black;
+                        }
+                        generate_mandelbrot_set(pointmap, x_shift, y_shift, precision, zoom);
+                    }
+                    window.clear();
+                    window.draw(pointmap);
+                    window.display();
+                }
+                
+                return 0;
+            }
+
+            //forrás : Sullychen - mandelbrot-set-plotter
+
+        ]]></programlisting>
+        </para>
+        
+        
+        <para>
+            Fontos megjegyeznünk, hogy a szükséges csomagot, ha még nem telepítettük, akkor tegyük meg, majd csak azután kezdhetünk neki a forráskódunk megírásához. Ahogy a Java kódban is láthatjuk majd nem szabad elfelejtünk az ablakunk beállítását. Továbbá létrehozunk egy Mandelbrot-halmazt, ahogyan azt az előző forráskódokban is megszokhattuk, ezután pedig már csak pár finomhangolásra van szükség :)
+        </para>
+    </section>                     
+    
+    <section>
+        <title>Mandelbrot nagyító és utazó Java nyelven</title>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Mandelbrot/Mandelbrot(nagy%C3%ADt%C3%B3%2Cutaz%C3%B3).java">Mandelbrot nagyító és utazó Java nyelven</link>
+        </para>
+        
+        
+        <para>
+        <programlisting><![CDATA[
+
+            import java.awt.*;
+            import java.awt.image.BufferedImage;
+            import javax.swing.*;
+            import java.awt.event.*;
+             
+            public class Mandelbrot extends JFrame implements ActionListener {
+             
+                private JPanel ctrlPanel;
+                private JPanel btnPanel;
+                private int numIter = 50;
+                private double zoom = 130;
+                private double zoomIncrease = 100;
+                private int colorIter = 20;
+                private BufferedImage I;
+                private double zx, zy, cx, cy, temp;
+                private int xMove, yMove = 0;
+                private JButton[] ctrlBtns = new JButton[9];
+                private Color themeColor = new Color(150,180,200);
+             
+                public Mandelbrot() {
+                    super("Mandelbrot Set");
+                    setBounds(100, 100, 800, 600);
+                    setResizable(false);
+                    setDefaultCloseOperation(EXIT_ON_CLOSE);
+                    plotPoints();
+                    
+                    Container contentPane = getContentPane();
+                    
+                    contentPane.setLayout(null);
+                    
+                    
+                    
+                    
+                    ctrlPanel = new JPanel();
+                    ctrlPanel.setBounds(600,0,200,600);
+                    ctrlPanel.setBackground(themeColor);
+                    ctrlPanel.setLayout(null);
+                    
+                    btnPanel = new JPanel();
+                    btnPanel.setBounds(0,200,200,200);
+                    btnPanel.setLayout(new GridLayout(3,3));
+                    btnPanel.setBackground(themeColor);
+                    
+                    ctrlBtns[1] = new JButton("up");
+                    ctrlBtns[7] = new JButton("down");
+                    ctrlBtns[3] = new JButton ("left");
+                    ctrlBtns[5] = new JButton("right");
+                    ctrlBtns[2] = new JButton("+");
+                    ctrlBtns[0] = new JButton("-");
+                    ctrlBtns[8] = new JButton(">");
+                    ctrlBtns[6] = new JButton("<");
+                    ctrlBtns[4] = new JButton();
+                    
+                    contentPane.add(ctrlPanel);
+                    contentPane.add(new imgPanel());
+                    ctrlPanel.add(btnPanel);
+                    
+                    for (int x = 0; x<ctrlBtns.length;x++){
+                        btnPanel.add(ctrlBtns[x]);
+                        ctrlBtns[x].addActionListener(this);
+                    }
+                    
+                    validate();
+                    
+                }
+             
+                public class imgPanel extends JPanel{
+                    public imgPanel(){
+                        setBounds(0,0,600,600);
+                        
+                    }
+                    
+                    @Override
+                    public void paint (Graphics g){
+                        super.paint(g);
+                        g.drawImage(I, 0, 0, this);
+                    }
+                }
+                
+                public void plotPoints(){
+                    I = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+                    for (int y = 0; y < getHeight(); y++) {
+                        for (int x = 0; x < getWidth(); x++) {
+                            zx = zy = 0;
+                            cx = (x - 320+xMove) / zoom;
+                            cy = (y - 290+yMove) / zoom;
+                            int iter = numIter;
+                            while (zx * zx + zy * zy < 4 && iter > 0) {
+                                temp = zx * zx - zy * zy + cx;
+                                zy = 2 * zx * zy + cy;
+                                zx = temp;
+                                iter--;
+                            }
+                            I.setRGB(x, y, iter | (iter << colorIter));
+                        }
+                    }
+                }
+                
+                public void actionPerformed(ActionEvent ae){
+                    String event = ae.getActionCommand();
+                    
+                    switch (event){
+                    case "up":
+                        yMove-=100;
+                        break;
+                    case "down":
+                        yMove+=100;
+                        break;
+                    case "left":
+                        xMove-=100;
+                        break;
+                    case "right":
+                        xMove+=100;
+                        break;
+                    case "+":
+                        zoom+=zoomIncrease;
+                        zoomIncrease+=100;
+                        break;
+                    case "-":
+                        zoom-=zoomIncrease;
+                        zoomIncrease-=100;
+                        break;
+                    case ">":
+                        colorIter++;
+                        break;
+                    case "<":
+                        colorIter--;
+                        break;
+                    }
+                    
+                    
+                    
+                    plotPoints();
+                    validate();
+                    repaint();
+                }
+                
+                
+                
+             
+                public static void main(String[] args) {
+                    new Mandelbrot().setVisible(true);
+                }
+            }
+
+        ]]></programlisting>
+        </para>
+        
+        
+        <para>
+            Picit más megközelítést fogunk látni, amikor a ".java" forráskódot olvassuk. Amint egyőbl láthatjuk is, importáljuk a szükséges csomagokat, majd pedig létrehozunk egy ablakot amiben dolgozni fogunk, a további sorokban pedig annak testreszabását visszük véghez, mint például a keret, méret, stb.. Majd pedig a lényeges dolog amit láthatunk a forráskódban az a <function>switch</function> függvény lesz, mely keretein megadjuk, hogy egyes billentyűkhöz köthetően mi történjen.
+        </para>
+    </section>
+</chapter>                

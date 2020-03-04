@@ -1,0 +1,130 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Conway!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Hangyaszimulációk</title>
+        <para>
+            Írj Qt C++-ban egy hangyaszimulációs programot, a forrásaidról utólag reverse engineering jelleggel
+            készíts UML osztálydiagramot is!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/10/10/myrmecologist">https://bhaxor.blog.hu/2018/10/10/myrmecologist</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Myrmecologist">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Myrmecologist</link>
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="./pic/ant.png"/>
+            </imageobject>
+        </mediaobject>
+        
+        <para>
+            Amikor ránézünk a fájljainkra, láthatjuk, hogy 4 nagy különböző osztály van: ant, antwin, typdeg és az antthread. Fontos itt elemeznünk, hogy maga a 4 osztály mire is való.</para>
+            <para>Kezdjük az elsővel, az "ant"- ban találhatóak a hangyák tulajdonságai, itt található az x,y koordináta amelyből a pontos helyüket határozzuk meg, valamint ezeknek az elmozdításával, az irányukat, "útjukat" is meg tudjuk határozni.</para>
+            <para>A második az "antwin" osztály található, melyben az ablak méretét állíthatjuk be, amikben a hangyák mozogni fognak.Mindent ami az ablakkal kapcsolatos azt itt tudjuk állítani.</para>
+            <para>A harmadik osztály a "typedef" mint a címkéből is gondolhatjuk, ez az osztály definiálja az "ants" típust.</para>
+            <para>Az utolsó osztályunk pedig az "antthread". Ez az osztály az "antwin" osztályban meg van hívva. Minden ami a hangyák tulajdonságát illeti itt tudjuk beállítani, pl. útvonal, amit követnek a hangyák, stb.</para>
+            
+            <para>
+                Diagrammal:
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="./pic/diagram.png"/>
+                    </imageobject>
+                </mediaobject>
+            </para>
+    </section>        
+    <section>
+        <title>Java életjáték</title>
+        <para>
+            Írd meg Java-ban a John Horton Conway-féle életjátékot, 
+            valósítsa meg a sikló-kilövőt!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/fulekylaszlo/DEIK/tree/master/Prog1/Forr%C3%A1sok/Conway/Sejtaut%C3%B3%20Java">Java Sejtautó</link>
+        </para>
+        <para>
+            A programot most egy picit másképpen kellesz futtatnunk, mint ahogyan a következő feladatban. A következő parancsokkal tudjuk lefuttatni, először írjuk be <function>javac Sejtautomata.java</function> majd ezután pedig <function>java Sejtautomata</function>.
+        </para>
+        <para>Ezután pedig már láthatjuk is a sikló-kilövőnket.
+        </para>
+    </section>        
+    <section>
+        <title>Qt C++ életjáték</title>
+        <para>
+            Most Qt C++-ban!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/fulekylaszlo/DEIK/tree/master/Prog1/Forr%C3%A1sok/Conway/Sejtaut%C3%B3">Sejtautó</link>
+        </para>
+        
+        
+        <para>
+        <programlisting><![CDATA[
+            #include <QApplication>
+            #include "sejtablak.h"
+            #include <QDesktopWidget>
+
+            int main(int argc, char *argv[])
+            {
+              QApplication a(argc, argv);
+              SejtAblak w(100, 75);
+              w.show();
+              
+              return a.exec();
+            }
+
+        ]]></programlisting>
+        </para>
+        
+        
+        <para>
+            John Conway életjátékát fogjuk kipróbálni aki egy matematikus volt a Cambridge Egyetem-en. A játék címke picit megtévesztő lehet, ugyanis, nem egy tipikus játékról van szó, mivel a felhasználónak nem kell mást tennie, csak megadni egy kezdőalakzatot és nézni az eredményt. A játék egyes lépéseit a számítógép számolja ki és végzi el, lehet emberi erővel is, de ez nagyon hosszadalmas.
+        </para>
+        
+        <para>
+            Van pár szabály amit tudnunk kell a kezdés előtt:
+        </para>
+        <para>
+            1: A sejt csak akkor éli túl a kört, ha 2 vagy 3 szomszédja van.
+        </para>
+        <para>
+            2: A sejt elpusztul ha 2-nél kevesebb vagy 3-nál több szomszédja van.
+        </para>
+        <para>
+            3: Új sejt születhet minden olyan cellában, melynek környezetében pontosan 3 sejt található.
+        </para>
+        
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="./pic/life.png"/>
+            </imageobject>
+        </mediaobject>
+        <para>
+        
+        </para>            
+    </section>        
+    <section>
+        <title>BrainB Benchmark</title>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/nbatfai/esport-talent-search">BrainB Benchmark</link>
+        </para>
+        <para>
+            Ennek a játéknak egyszerű a célja, a program segítségével megnézhetjük, hogy egy "átlagos játékos"-t mi választ el attól, hogy profi E-sportoló lehessen, illetve, hogy megnézhessük a különbségeket. Elég csak pár percet eltöltenünk a játékban és máris fogjuk látni, mik a nehézségek.
+        </para>
+        <para>
+            A játék lényege, miután futtatjuk az az, hogy a képernyőn látni fogunk, bizonyos alakzatokat és egy fekete pöttyöt is. A mi feladatunk az, hogy az egeret a fekete pöttyön tartsuk. A dolgunkat viszont megnehezíti az, hogy a fekete pötty folyamatosan mozog a képernyőn, rázkódik és a különböző alakzatok alá, felé, mellé mozog.
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="./pic/brainb.png"/>
+            </imageobject>
+        </mediaobject>
+    </section>        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

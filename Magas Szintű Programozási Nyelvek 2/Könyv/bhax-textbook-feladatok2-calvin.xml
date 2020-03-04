@@ -1,0 +1,227 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Calvin!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>
+            13. hét Multiparadigmás nyelvek és 14. hét Programozás multiparadigmás nyelveken.
+        </title>
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Multiparadigma:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            Jelen esetben gyakran használom az úgynevezett nyelvet, amely multiparadigmás,
+            tehát támogatja a procedurális-imperatív, strukturált, funkcionális és
+            objektumorientált stílusú programozást is.
+        </para>
+        <para>
+            Bővebben itt lehet utánaolvasni:<link xlink:href="https://hu.wikipedia.org/wiki/Swift_(programoz%C3%A1si_nyelv)">Swift</link>
+        </para>
+    </section>
+    <section>
+        <title>MNIST</title>
+        <para>
+            Az alap feladat megoldása, +saját kézzel rajzolt képet is ismerjen fel.
+            Háttérként ezt vetítsük le:
+            https://prezi.com/0u8ncvvoabcr/no-programming-programming/
+        </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow">Tensorflow</link>
+        </para>
+        <para>
+            Ahhoz, hogy macen működésre bírjuk a programot elég sokmindent meg kell
+            tennünk, én is egy weboldal alapján csináltam végig:
+            <link xlink:href="https://www.pyimagesearch.com/2019/01/30/macos-mojave-install-tensorflow-and-keras-for-deep-learning/">Útmutató</link>
+            Ezt lépésről lépésre végig kell csinálni. Igaz, MacOS Mojave verzióra
+            van alapjáraton megírva, de nekem az újabb Catalina verzión is
+            működött ezekkel a lépésekkel. Ami még nehézséget okozott az az volt,
+            hogy néhány python modult magunknak kellett importálni, ezek nincsenek
+            leírva a weboldalon sem, viszont most fogjuk megtekinteni a forrásunkat,
+            és az ott látható összes importált modult, telepítenünk kell akár fájlból,
+            akár terminálból.
+        </para>
+        <para>
+            A forrást tekintve láthatjuk, hogy importáljuk a szükséges könyvtárakat:
+        </para>
+        <para>
+            <programlisting><![CDATA[
+                     import keras
+                     from keras.datasets import fashion_mnist
+                     from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
+                     from keras.models import Sequential
+                     from keras.utils import to_categorical,np_utils
+                     from PIL import Image
+                     import numpy as np
+                     import matplotlib.pyplot as plt import tensorflow as tf
+                     import os
+            ]]></programlisting>
+        </para>
+        <para>
+            Ezek közül néhányat nem fog sikerülni felrakni a webes útmutató segítségével
+            de csak rá kell keresnünk az adott modul nevére, és ki is dobja, hogyan
+            kell telepíteni.
+        </para>
+        <para>
+            Egymásra pakolhatunk rétegeket az alábbi módon:
+        </para>
+        <para>
+            <programlisting><![CDATA[
+                  model = Sequential()
+            ]]></programlisting>
+        </para>
+        <para>
+            Majd hozzáadjuk a rétegeket, az első rétegben megadjuk a bemeneti alakot,
+            hogy milyen formát várunk. 64 darab neuront fogunk használni a hálóban,
+            a második paraméterben a detektorokat adjuk meg, a harmadikban pedig, hogy
+            28x28-as képeket fogunk megadni bemenetnek.
+        </para>
+        <para>
+            <programlisting><![CDATA[
+             model.add(Conv2D(64, (3,3), input_shape=(28, 28, 1)))
+            ]]></programlisting>
+        </para>
+        <para>
+            Beállítjuk a tanulási folyamat tulajdonságait, kiíratjuk a veszteséget,
+            pontosságot, és a felismert számot is.
+        </para>
+        <para>
+            <programlisting><![CDATA[
+             model.compile(loss=keras.losses.categorical_crossentropy,
+             optimizer=keras. ←􏰀 optimizers.Adam(),metrics=[’accuracy’])
+            ]]></programlisting>
+        </para>
+        <para>
+                      <mediaobject>
+                              <imageobject>
+                                  <imagedata fileref= "pic/seven.png"/>
+                              </imageobject>
+                      </mediaobject>
+               </para>
+        <para>
+                      <mediaobject>
+                              <imageobject>
+                                  <imagedata fileref= "pic/two.png"/>
+                              </imageobject>
+                      </mediaobject>
+               </para>
+        
+    </section>
+
+    <section>
+        <title>Deep MNIST</title>
+        <para>Mint az előző, de a mély változattal. Segítő ábra, vesd össze a forráskóddal a
+            https://arato.inf.unideb.hu/batfai.norbert/NEMESPOR/DE/denbatfai2.pdf
+            8. fóliáját!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+    <section>
+        <title>CIFAR-10</title>
+        <para>
+            Az alap feladat megoldása, +saját fotót is ismerjen fel.
+        </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://progpater.blog.hu/2016/12/10/hello_samu_a_cifar-10_tf_tutorial_peldabol">Cifar-10</link>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>Android telefonra a TF objektum detektálója</title>
+        <para>
+           Telepítsük fel, próbáljuk ki!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+        <link xlink:href="https://play.google.com/store/apps/details?id=simple.objectdetector">Google Play Tf</link>
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/laptop.png"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/mouse.png"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/coin.png"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+        <para>
+            Az első 2 képen azt láthatjuk, hogy a mesterséges intelligencia
+            sikeresen felismerte a tárgyakat melyekre főkuszáltunk, ámbár az
+            utolsó képen azt vehetjük észre, hogy bár a formát eltalálta, mivel
+            az érme illetve az általa "megjósolt" óra is kör alakú, viszont
+            nem találta el pontosan a tárgyat.
+        </para>
+    </section>
+    
+    <section>
+        <title>SMNIST for Machines</title>
+        <para>
+            Készíts saját modellt, vagy használj meglévőt, lásd:
+            https://arxiv.org/abs/1906.12213
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>Minecraft MALMO-s példa</title>
+        <para>
+           A https://github.com/Microsoft/malmo felhasználásával egy ágens példa,
+           lásd pl.: https://youtu.be/bAPSu3Rndi8,
+           https://bhaxor.blog.hu/2018/11/29/eddig_csaltunk_de_innentol_mi,
+           https://bhaxor.blog.hu/2018/10/28/minecraft_steve_szemuvege
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+</chapter>

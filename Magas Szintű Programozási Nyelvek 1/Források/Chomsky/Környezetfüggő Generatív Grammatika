@@ -1,0 +1,12 @@
+1.Példa:
+	Megadatt változók= S, X, Y.
+	Konstansok: a, b, c.
+	Szabályok melyeket alkalmazunk: S->abc, S->aXScc, X->aYa, Ya->aX, Xa->aabb.
+	Így azt kapjuk, hogy: S->aXScc->aXabccc->aaabbbccc.
+  
+ 
+2.Példa:  
+  Megadott változók= S, X, Y.
+	Konstansok: a, b, c.
+	Szabályok melyeket alkalmazunk: S->abc, S->aXaYS, Yab->bcc, Xa->aabb.
+	Így azt kapjuk, hogy: S->aXaYS->aXaYabc->aXabccc->aaabbbccc.

@@ -1,0 +1,318 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>
+            Helló, Stroustrup!
+        </title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+    <title>
+      Objektumorientált programozási nyelvek típusrendszere (pl.: Java, C#) és 6. hét Típusok tagjai: mezők, (nevesített) konstansok, tulajdonságok, metódusok, események, operátorok, indexelők, konstruktorok, destruktorok, beágyazott típusok.
+    </title>
+    
+    <simpara>
+        <emphasis role="strong">
+            <emphasis>
+                Típusok tagjai: Mezők, nevesített konstansok, tulajdonságok,
+                metódusok, események, operátorok, indexelők, konstruktorok,
+                destruktorok, beágyazott típusok.
+            </emphasis>
+        </emphasis>
+    </simpara>
+    
+    <para>
+        A mezők azok az osztályok adattagjai valójában. A konstansok azok változók,
+        amelyek az egész program alatt ugyan azon az értéken vannak, nem változtathatóak.
+        A metódusok, azok utasításokat tartalmaznak (eljárás, függvény). Események,
+        beépített funkciók(C) mikor, valamilyen cselekményre történik valami, pl.
+        egérkattintás. Az operátorok, olyan beépített karakterek, melyek műveleteket
+        hajtanak végre. Konstruktor az egy speciális metódus, mely egy osztály
+        példányosításakor, automatikusan lefut. A destruktor, az pedig erőforrásokat
+        szabadít fel.
+    </para>
+    </section>
+    
+    <section>
+        <title>
+            JDK osztályok
+        </title>
+        <caution>
+            <title>
+                Tutoriált
+            </title>
+            <para>
+                Ebben a feladatban tutoriált Dékány Róbert.
+            </para>
+        </caution>
+        <para>
+           Írjunk olyan Boost C++ programot (indulj ki például a fénykardból)
+           amely kilistázza a JDK összes osztályát (miután kicsomagoltuk az
+           src.zip állományt, arra ráengedve)!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Stroustrup/JDK">JDK</link>
+        </para>
+        <para>
+            Ebben a feladatban egy JDK src.zip fájlból kellet kiiratnunk az összes
+            ".java" végződésű/kiterjesztésű osztályt. Azonban én sorra hibába
+            ütköztem munkám folyamán, nem találtam rá megoldást, csak olyan válaszokat,
+            hogy jelenleg változások vannak a "boost"-ban és még nem minden stabil a header
+            fájlok értelmében(Macre nézve). Dolgoznak a fejlesztők rajta, de idő kell nekik.
+            Így tutorom "Dékány Róbert" segítségét kértem ebben a feladatban.
+        </para>
+        <para>
+            Először meg kell adnunk, hogy a programunk elérje a ".java" kiterjesztésű
+            fájlokat, így a <function>vector &lt; string &gt; getClass (string path)</function>
+            fogjuk használni erre a célra. Majd a <function>readJavaExt(root, classes)</function>
+            pedig a keresésért lesz felelős. Ide két paramétert fogunk megadni.
+            A "root" a feljebb említett elérési útvonalért lesz felelős, a "classes"
+            pedig egy referencia lesz. A <function>classes.push_back(path.string());</function>
+            azért lesz fontos, mivel ha könyvtárat kapunk útvonalként, akkor egyre beljebb
+            "mászik" és újrahívjuk a függvényt, viszont ha nem könyvtárat kapunk, hanem
+            fájlt akkor megnézzük, hogy a kiterjesztés megfelel- e az általunk keresett
+            (.java) kiterjesztésnek.
+        </para>
+        
+    </section>
+    
+    <section>
+        <title>
+            Másoló-mozgató szemantika
+        </title>
+        <para>
+            Kódcsipeteken (copy és move ctor és assign) keresztül vesd össze a
+            C++11 másoló és a mozgató szemantikáját, a mozgató konstruktort
+            alapozd a mozgató értékadásra!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Stroustrup/MM">Másoló-mozgató szemantika</link>
+        </para>
+        <para>
+            Túl kell terhelnünk az egyenlőség operátort, így a mozgató értékadás
+            így fog kinézni:
+        </para>
+            <para>
+            <programlisting><![CDATA[
+         LZWBinFa & operator= (LZWBinFa && regi){
+              
+              std::swap(gyoker, regi.gyoker);
+              
+              std::swap(fa, regi.fa);
+              
+        }
+            ]]></programlisting>
+            </para>
+            <para>
+                A binfának ebben a vátlozatában a binfa muatótként tartalmazza
+                a gyökeret. A két gyökérmutatót, std_swap függvényt, és az aktuális
+                objektumot tesszük vissza a <function>this</function>-el, arra hivatkozva.
+            </para>
+            <para>
+                A mozgató konstruktorban annyi fog történni, hogy az új objektumunk
+                megkapja a régi binfa gyökérpointerét, és ezután a régi bjektum pointerét
+                kinullázzuk.
+            </para>
+            <para>
+                <programlisting><![CDATA[
+                       LZWBinFa ( LZWBinFa && regi )
+                       {
+                            gyoker = regi.gyoker;
+                            regi.gyoker = nullptr;
+                       
+                       }
+                           ]]></programlisting>
+            </para>
+            <para>
+                A move függvény azért fontos, mert így rá tudjuk venni a mozgató
+                konstruktort, hogy a mozgató értékadást használja.
+            </para>
+            <para>
+                           <programlisting><![CDATA[
+                                  LZWBinFa ( LZWBinFa && regi )
+                                  {
+                                    gyoker = nullptr;
+                                    *this = std::move(regi);
+                                  }
+                                      ]]></programlisting>
+                       </para>
+            <para>
+                Az eredeti mozgató konstruktorban nulláztuk a régi binfa
+                gyökérmutatóját. Ezt itt is megtettük, viszont utána, használtuk
+                a <function>move</function> függvényt, és így a <function>swap</function>
+                -el a mozgató értékadás megcseréli a két fának a gyökérmutatóját, és így
+                az új fa megkapja a régi fa gyökerét, a régi pedig nullpointerre
+                lesz állítva.
+            </para>
+            <para>
+                A mozgató szemantika, mint már írtam a <function>move</function>
+                segítségével lehetséges, így az agumentumként megadott értékből
+                jobbértékreferenciát tudunk előállítani, ami paraméterként már
+                megfelel a mozgató konstruktornak.
+            </para>
+            <para>
+                <programlisting><![CDATA[
+                LZWBinFa binfa1;
+                binfa1 = std::move(binFa);
+                  ]]></programlisting>
+            </para>
+        
+    </section>
+    
+    <section>
+        <title>
+            Hibásan implementált RSA törése
+        </title>
+        <para>
+            Készítsünk betű gyakoriság alapú törést egy hibásan implementált
+            RSA kódoló:
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_3.pdf
+            (71-73 fólia) által készített titkos szövegen.
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            Változó argumentumszámú ctor
+        </title>
+        <para>
+          Készítsünk olyan példát, amely egy képet tesz az alábbi projekt
+          Perceptron osztályának bemenetére és a Perceptron ne egy értéket,
+          hanem egy ugyanakkora méretű „képet” adjon vissza.
+          (Lásd még a 4 hét/Perceptron osztály feladatot is.)
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Stroustrup/VA">Perceptron</link>
+        </para>
+        <para>
+            A fordítás és futtatás egyszerűen néz ki, mégpedig:
+        </para>
+        <para><programlisting><![CDATA[
+        g++ mlp.hpp main.cpp -lpng -std=c++11
+        ./a.out mandel.png
+        ]]></programlisting>
+        </para>
+        <para>
+            A "-lpng" kapcsolónak egy funkciója van, mégpedig, hogy használjuk a png
+            könyvtárat, majd a "-std=c++11" pedig azt jelzi, hogy a C++ 11-es verziójú
+            szabványt kívánjuk használni. A mandel.png pedig a megszokott mandelbrot halmazos
+            képünk, amit bemenetként adunk meg.
+        </para>
+        <para>
+            A kapott képünk pedig így fog kinézni:
+            <mediaobject>
+                    <imageobject>
+                        <imagedata fileref= "pic/kimenet.png" width="100%"/>
+                    </imageobject>
+            </mediaobject>
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Összefoglaló a feladathoz/perceptronhoz:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            Mi is az a perceptron? Mire használjuk ? A perceptron az valójában
+            egy algoritmus/neurális háló, ami a gépi tanulásban használatos. Az
+            algoritmus pedig megadott úgynevezett "weight" tehát súlyok alapján
+            képes eldönteni, hogy a megadott bemenet, egy
+            osztályhoz tartozik-e vagy sem. Az alap perceptronban találhatunk, egy
+            számunkra fura részt, mégpedig:
+            <programlisting><![CDATA[
+            double sigmoid ( double x )
+            {
+              return 1.0/ ( 1.0 + exp ( -x ) );
+            }
+            ]]></programlisting> Ez pedig nem más mint a perceptron aktivációs
+            függvénye. Pontosabban a sigmoid metódus. Magában az aktivációs függvény
+            ennyi lenne, ezt pedig a többi metódus folyamatosan meg fogja hívni,
+            pl. akár a feljebb említett súlyok kiszámítására is.
+        </para>
+        <para>
+            Amint a forráskódunkban láthatjuk, a képfájlok helyes kezelése végett,
+            nem szabad elfelejtenünk a "libpng" csomagot. Első lépés, hogy be kell
+            ágyaznunk a programunkba. majd ezt követően pedig deklarálni kell egy képet,
+            a png csomaggal. Ezt így tudjuk megtenni:
+        </para>
+        <programlisting language="c++">
+                    <![CDATA[
+        png::image <png::rgb_pixel> ach (argv[1]);
+                    ]]>
+                </programlisting>
+        <para>
+            Majd láthatjuk, hogy különböző metódusokat használunk a képünk személyre
+            szabására, mint pl. a <function>get.height()</function> és a <function>get.width()</function>
+            Miután megfelelően módosítottuk a képünk paramétereit, a "write png"
+            metódussal fogjuk véglegesíteni:
+        </para>
+         <programlisting language="c++">
+                    <![CDATA[
+        for(int i = 0; i < ach.get_width(); ++i)
+            for(int j = 0; j<  ach.get_height(); ++j){
+            ach[i][j].green = value[i*ach.get_height()+j];
+            }
+            kep.write("kimenet.png");
+                    ]]>
+                </programlisting>
+         <para>
+             A perceptron lehet, 1 vagy több rétegű is. Példányosításnál, ez azt jelenti, hogy
+             az inicializáláskor először a rétegszámot adjuk meg majd pedig egy értéket.
+         </para>
+         <para>
+             A perceptron destruktora így fog kinézni:
+         </para> <programlisting language="c++">
+                    <![CDATA[
+         delete p;
+         delete [] image;
+                    ]]>
+                </programlisting>
+         <para>
+             Ez a konstruktor által lefoglalt tárhelyet fogja felszabadítani. Törlésre
+             kerülnek a rétegek és a súlyok is.
+         </para>
+         <programlisting language="c++">
+                    <![CDATA[
+          for (int i = 0; i < ach.get_width(); ++i)
+              for (int j = 0; j < ach.get_height(); ++j)
+                   
+                  image[i*ach.get_width()+j] = kep[i][j].green;
+                    ]]>
+                </programlisting>
+         <para>
+             Majd tároljuk a színkomponenseket az "image-ben." Miután a számolások befejeződnek,
+             az eredeti képet fogjuk átírni. A kapott tömb elemeit pedig a pixelek megfelelő
+             helyeire fogjuk beírni és meg is vagyyunk.
+         </para>
+         
+    </section>
+    
+    <section>
+        <title>
+            
+            Összefoglaló</title>
+        <para>
+            Az előző 4 feladat egyikéről írj egy 1 oldalas bemutató „”esszé szöveget!
+        </para>
+        <para>
+            Összevonva a "Változó argumentumszámú ctor" Perceptronos feladattal.
+        </para>
+    </section>
+   
+</chapter>
+
+
+
+

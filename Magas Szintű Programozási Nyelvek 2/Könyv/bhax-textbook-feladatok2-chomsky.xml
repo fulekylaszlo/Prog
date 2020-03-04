@@ -1,0 +1,462 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>
+            Helló, Chomsky!
+        </title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>
+          Objektumorientált programozási nyelvek programnyelvi elemei:
+          karakterkészlet, lexikális egységek, kifejezések, utasítások.
+        </title>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Karakterkészlet:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+           Karakterek kódolására, tulajdonképpen 2 fajta változatot tudunk
+           megkülönböztetni. Az egyik az ASCII (egy bájton van meghatározva,
+           minden karakter- ma már nem használatos a sokfajta különböző nyelv,
+           speciális karakter miatt). A másik pedig az UNICODE (2 bájton vannak
+           ábrázolva a karakterek, így sokkal több a lehetőség is).
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Lexikális egységek:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+           Valójában a program legkisseb jelentéssel bíró egységei. Különböző
+           típusúak lehetnek. Kulcsszavak, előre deklarált azonosítók, programban
+           deklarált azonosítók, decimális számok, operátorok, ehatároló jelek.
+        </para>
+    </section>
+    <section>
+        <title>
+            Encoding
+        </title>
+        <para>
+            Fordítsuk le és futtassuk a Javat tanítok könyv
+            MandelbrotHalmazNagyító.java forrását úgy, hogy a fájl nevekben és a
+            forrásokban is meghagyjuk az ékezetes betűket!
+            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Chomsky/Encoding">Encoding</link>
+        </para>
+        <para>
+            Miután megpróbáljuk a megszokott módon futtatni a java forráskódunkat,
+            egy hibaüzenetet fogunk kapni, mégpedig:
+        </para>
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/withoutencoding.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        
+        <para>
+            Ezt úgy tudjuk orvosolni, hogy nem a megszokott módon futtatunk, mert
+            ugye speciális karakterek vannak a forráskódunkban amit az UTF-8 nem
+            ismer fel.
+        </para>
+        <para>
+            Viszont ha úgy próbáljuk meg futtani, hogy:
+            <programlisting><![CDATA[ javac -encoding ISO-8859-2 fajl_nev.java]]></programlisting>
+            Így már sikerrel fogunk járni.
+        </para>
+        
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/withencoding.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        
+        <para>
+            És megkapjuk a szokásos alap Mandelbrot ábrát amit már megszokhattunk
+            régebbi feladatokban.
+        </para>
+        
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/Mandelbrotpic.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        
+        <para>
+            Azt, hogy az "-encoding" kapcsolót mivel kell használni azt
+            <link xlink:href="https://en.wikipedia.org/wiki/ISO/IEC_8859-1">itt</link>
+            találtam meg, mégpedig:
+        </para>
+        
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/encodingkapcs.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+    </section>        
+
+    <section>
+        <title>
+            OOCWC lexer
+        </title>
+        <para>
+            Izzítsuk be az OOCWC-t és vázoljuk a
+            https://github.com/nbatfai/robocar- emulator/blob/master/justine/rcemu/src/carlexer.ll
+            lexert és kapcsolását a programunk OO struktúrájába!
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>        
+    
+    <section>
+        <title>l334d1c45</title>
+        <para>
+            Írj olyan OO Java vagy C++ osztályt, amely leet cipherként működik,
+            azaz megvalósítja ezt a betű helyettesítést:
+            https://simple.wikipedia.org/wiki/Leet (Ha ez első részben nem tetted
+            meg, akkor írasd ki és magyarázd meg a használt struktúratömb
+            memóriafoglalását!)
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Chomsky/L33t">L33t</link>
+        </para>
+        <para>
+            Ezt a példaprogramot már láthattuk a régebbi fejeztekben, azonban most
+            módosítunk rajta egy keveset, mégpedig az abc betűihez és '0-9' számokhoz
+            ezeket a karaktereket fogjuk rendelni:
+        </para>
+        <para>
+            <programlisting><![CDATA[
+             %{
+
+              #include <stdio.h>
+              #include <ctype.h>
+              #include <string.h>
+              #include <time.h>
+              #include <stdlib.h>
+                 
+              int x=0;
+                 
+              typedef struct{
+                     char c;
+                     char *d[7];
+                 } cipher;
+                 cipher L337[] = {
+
+                     {'a',{"4","/-", "/_", "@", "/"}},
+                     {'b',{"8","|3", "13", "|}", "|:", "|8", "18", "6", "|B", "|8", "lo", "|o", "j3", "ß"}},
+                     {'c',{"<", "{", "[", "(", "©", "¢"}},
+                     {'d',{"|)", "|}", "|]", "|>"}},
+                     {'e',{"3", "£", "₤", "€"}},
+                     {'f',{"|=", "ph", "|#", "|-"}},
+                     {'g',{"[", "-", "[+", "6", "C-"}},
+                     {'h',{"4", "|-|", "[-]", "{-}", "}-{", "}{", "|=|", "[=]", "{=}", "/-/", "(-)", ")-(", ":-:", "I+I"}},
+                     {'i',{"1", "|", "!", "9"}},
+                     {'j',{"_|", "_/", "_7", "_)", "_]", "_}"}},
+                     {'k',{"|<", "1<", "l<", "|{", "l{"}},
+                     {'l',{"|_", "|", "1", "]["}},
+                     {'m',{"44", "|\/|", "^^", "/\/", "][", "[]V[]"}},
+                     {'n',{"|\|", "/\/", "/V", "][\\][", "И"}},
+                     {'o',{"0", "()", "[]", "{}", "<>", "Ø", "oh"}},
+                     {'p',{"|o", "|O", "|>", "|*", "|°", "|D", "/o", "[]D", "|7"}},
+                     {'q',{"O_", "9", "(",")", "0","kw"}},
+                     {'r',{"|2", "12", ".-", "|^", "l2", "Я", "®"}},
+                     {'s',{"5", "$", "§"}},
+                     {'t',{"7", "+", "7`", "'|'" , "`|`" , "~|~" , "-|-", "']['"}},
+                     {'u',{"|_|", "/_/", "\_/", "(_)", "[_]", "{_}"}},
+                     {'v',{"\/"}},
+                     {'w',{"\/\/", "(/\)", "\^/", "|/\|", "\/", "\\'"}},
+                     {'x',{ "%", "*", "><", "}{", ")(", "Ж"}},
+                     {'y',{"`/", "¥", "\|/", "Ч"}},
+                     {'z',{"2", "5", "7_", ">_","(/)"}},
+                     
+                     
+                     {'1',{"I","L"}},
+                     {'2',{"Z","e"}},
+                     {'3',{"E","❤️"}},
+                     {'4',{"h","A"}},
+                     {'5',{"S"}},
+                     {'6',{"b","G"}},
+                     {'7',{"T","j"}},
+                     {'8',{"B","X"}},
+                     {'9',{"g","J"}},
+                     {'0',{"O","D"}},
+                       
+                 };
+             %}
+
+
+             %option noyywrap
+             %%
+             \n     {
+                     printf("\n");
+                 }
+             .     {
+                     srand(time(0)+x++);
+                     char c = tolower(*yytext);
+                     int i=0;
+                     while(i<36 && L337[i++].c!=c);
+                     if(i<36)
+                     {
+                         char *s=L337[i-1].d[rand()%7];
+                         printf("%s",s);
+                     }
+                     else
+                     {
+                         printf("%c",c);
+                     }
+                 }
+             %%
+             int main()
+             {
+                 yylex();
+                 return 0;
+             }
+              ]]></programlisting>
+        </para>
+        
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/karakterek.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        
+        <para>
+            A feladatunk egészen egyszerű, egy "kódolót" kell létrehoznunk aminek
+            megadunk egy bizonyos szöveget és a megfelelő betűt/számot a megfelelő
+            karakterrel fogja kódolni. Tulajdonképpen titkosírásról is beszélhetünk.
+        </para>
+        <para>
+            Íme egy kis példa, hogyan is fog ez kinézni:
+        </para>
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/leet.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            Viszont ne felejtsük el, hogy nem megszokott módon kell fordítanunk, ugyanis:
+            <programlisting><![CDATA[
+                lex fajl_nev.c
+                gcc lex.yy.c
+                ./a.out]]></programlisting>
+        </para>
+        
+    </section>
+    
+    <section>
+        <title>Full screen</title>
+        <para>
+            Készítsünk egy teljes képernyős Java programot!
+            Tipp: https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Chomsky/Javafullscreen">Legegyszerűbb, legérthetőbb példa fullscreen programra</link>
+        </para>
+        <para>
+            A feladatunk annyi, hogy egy Java teljes képernyős programot készítsünk.
+            Nem volt feltétel, mennyire kell bonyolultnak vagy összetettnek lennie
+            a programnak, úgyhogy egy nagyon egyszerű de annál jobban érthető megoldást
+            hoztam.
+        </para>
+        <para>
+            A programunk egy képet fog kivetíteni a teljes képernyőnkre, legyen
+            az bármilyen méretű, és funcionalitás képpen dupla bal egérgomb kattintásra
+            kilép a program.
+        </para>
+        <para>
+            <programlisting language="Java" ><![CDATA[
+               import java.awt.Frame;
+               import java.awt.Graphics;
+               import java.awt.GraphicsDevice;
+               import java.awt.GraphicsEnvironment;
+               import java.awt.Window;
+               import java.awt.event.MouseAdapter;
+               import java.awt.event.MouseEvent;
+               import java.awt.image.BufferedImage;
+               import java.io.File;
+
+               import javax.imageio.ImageIO;
+                class FULLOS extends Window
+               {
+
+                 private BufferedImage pic;
+
+                 public static void main(String[] args) {
+                   GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                   GraphicsDevice screen = ge.getDefaultScreenDevice();
+
+                   if (!screen.isFullScreenSupported()) {
+                     System.out.println("A teljes képernyős kijelzés nincs támogatva!");
+                     System.exit(1);
+                   }
+
+                   try {
+                     BufferedImage loadedpic = ImageIO.read(new File("pic.jpg"));
+                     screen.setFullScreenWindow(new FULLOS(loadedpic));
+                   } catch (Exception e) {
+                     System.err.println(e.getMessage());
+                   }
+                 }
+
+                 public FULLOS(BufferedImage pic) {
+                   super(new Frame());
+
+                   this.pic = pic;
+
+                   addMouseListener(new MouseAdapter() {
+                     public void mouseClicked(MouseEvent e) {
+                       System.exit(0);
+                     }
+                   }
+               );
+                 }
+
+                 public void paint(Graphics g) {
+                   g.drawImage(pic, 0, 0, getWidth(), getHeight(), this);
+                 }
+               }]]></programlisting>
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            Paszigráfia Rapszódia OpenGL full screen vizualizáció
+        </title>
+        <para>
+           Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl.
+           színvilág, textúrázás, a szintek jobb elkülönítése, kézreállóbb
+           irányítás.
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>Paszigráfia Rapszódia LuaLaTeX vizualizáció</title>
+        <para>
+         Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl.
+         színvilág, még erősebb 3D-s hatás.
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>Perceptron osztály</title>
+        <para>
+            Dolgozzuk be egy külön projektbe a projekt Perceptron osztályát!
+            Lásd https://youtu.be/XpBnR31BRJY
+        </para>
+        <para>
+            Megoldás videó:<link xlink:href="https://bit.ly/2P3zvuV">Perceptron</link>
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Chomsky/Perceptron">Perceptron</link>
+        </para>
+        <para>
+            A perceptron a mesterséges intelligenciában használt neurális háló.
+            Bővebben kifejtettük a könyv 1. fejezetében így azt most nem tenném meg,
+            hiszen az általános tudnivalókat már tudnunk kell.
+        </para>
+        <para>
+            A main.cpp-ben létrehoztunk a parancssori argumentumként megadott képünket,
+            majd a size változóban fogjuk tárolni a kép méretét.
+        </para>
+        <para>
+            <programlisting language="c++" ><![CDATA[
+                
+                png::image <png::rgb_pixel> png_image (argv[1]);
+                
+                int size = png_image.get_width()*png_image.get_height();
+            ]]></programlisting>
+        </para>
+        <para>
+            Ezután példányosítjuk a perceptron osztályt, az objektumoknak pedig
+            3 réteget fogunk megadni, mégpedig az első rétegben a "size" darab
+            neuron lesz, a másodiknak 256, a harmadik(utolsó) rétegnek pedig 1.
+        </para>
+        <para>
+            <programlisting language="c++" ><![CDATA[
+                Perceptron* p = new Perceptron(3, size, 256, 1);
+             ]]></programlisting>
+        </para>
+        <para>
+            A perceptron konstruktora változó paraméterű, számú, így az első rétegnek
+            megadjuk, hogy hány neurális réteget adunk a perceptronnak, majd külön rétegben
+            megadjuk a neuronok számát is.
+        </para>
+        <para>
+            Majd a dupla for ciklusban az image tömbbe fogjuk tárolni a kép pixeleinek
+            red értékét, ami [0,255] intervallimból lesz.
+        </para>
+        <para>
+            <programlisting language="c++" ><![CDATA[
+               for(int i {0}; i<png_image.get_width(); ++i)
+                       for(int j {0}; j<png_image.get_height(); ++j)
+                          image[i*png_image.get_width()+j] = png_image[i][j].red;
+            ]]></programlisting>
+        </para>
+        <para>
+            Majd pedig meghívjuk erre a tömbre a perceptront a túlterhelt operátornak
+            a segítségével.
+        </para>
+        <para>
+            <programlisting language="c++" ><![CDATA[
+                double value = (*p) (image);
+            ]]></programlisting>
+        </para>
+        <para>
+            Ezt követően már csak kiiratjuk az értéket.
+              </para>
+              <para>
+                  <programlisting language="c++" ><![CDATA[
+                      std::cout << value << std::endl;
+                  ]]></programlisting>
+              </para>
+    </section>
+                    
+</chapter>                
+
+
+

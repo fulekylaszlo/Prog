@@ -1,0 +1,822 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>
+            Helló, Vessző!
+        </title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+    <title>
+        Adatfolyamok kezelése, streamek és 11. hét I/O, állománykezelés. Szerializáció.
+    </title>
+    <simpara>
+               <emphasis role="strong">
+                   <emphasis>
+                       Adatfolyamok:
+                   </emphasis>
+               </emphasis>
+           </simpara>
+    <para>
+        Az információ kinyeréséhez, a programunk megnyit egy adatfolyamatot az
+        információforráshoz és sorban kiolvassa az információt. Az alábbi ábrákon
+        áttekinthetőbb:
+     </para>
+    <para>
+        Olvasás fájlból:
+    </para>
+    <para>
+           <mediaobject>
+                   <imageobject>
+                       <imagedata fileref= "pic/read.png" width="100%"/>
+                   </imageobject>
+           </mediaobject>
+           </para>
+    <para>
+        Írás fájlba
+    </para>
+    <para>
+           <mediaobject>
+                   <imageobject>
+                       <imagedata fileref= "pic/write.png" width="100%"/>
+                   </imageobject>
+           </mediaobject>
+           </para>
+    <para>
+        Bővebben itt lehet utánaolvasni:<link xlink:href="http://java.progtanulo.hu/201-adatfolyamok">Java Adatfolyamok</link>
+    </para>
+    </section>
+    
+    <section>
+        <title>
+            FUTURE tevékenység editor
+        </title>
+        <para>
+            Javítsunk valamit a ActivityEditor.java JavaFX programon!
+            https://github.com/nbatfai/future/tree/master/cs/F6
+            Itt láthatjuk működésben az alapot:
+            https://www.twitch.tv/videos/222879467
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            
+            <programlisting language="Java" ><![CDATA[
+           /*
+            * ActivityEditor.java
+            *
+            * FUTURE6: ACT & ACT PROPS EDITOR, (F6ActEdit)
+            *
+            * Copyright (C) 2018, Norbert Bátfai. PhD
+            *
+            * This program is free software: you can redistribute it and/or modify
+            * it under the terms of the GNU General Public License as published by
+            * the Free Software Foundation, either version 3 of the License, or
+            * (at your option) any later version.
+            *
+            * This program is distributed in the hope that it will be useful,
+            * but WITHOUT ANY WARRANTY; without even the implied warranty of
+            * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            * GNU General Public License for more details.
+            *
+            * You should have received a copy of the GNU General Public License
+            * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+            *
+            * Ez a program szabad szoftver; terjeszthető illetve módosítható a
+            * Free Software Foundation által kiadott GNU General Public License
+            * dokumentumában leírtak; akár a licenc 3-as, akár (tetszőleges) későbbi
+            * változata szerint.
+            *
+            * Ez a program abban a reményben kerül közreadásra, hogy hasznos lesz,
+            * de minden egyéb GARANCIA NÉLKÜL, az ELADHATÓSÁGRA vagy VALAMELY CÉLRA
+            * VALÓ ALKALMAZHATÓSÁGRA való származtatott garanciát is beleértve.
+            * További részleteket a GNU General Public License tartalmaz.
+            *
+            * A felhasználónak a programmal együtt meg kell kapnia a GNU General
+            * Public License egy példányát; ha mégsem kapta meg, akkor
+            * tekintse meg a <http://www.gnu.org/licenses/> oldalon.
+            *
+            * Version history
+            *
+            * 0.0.1, 14 Jan 18.
+            *
+            * Basic usage
+            *
+            * $ javac ActivityEditor.java
+            * $ java ActivityEditor --city=Debrecen --props=me.props,gaming.props,programming.props
+            *
+            * References
+            *
+            * https://docs.oracle.com/javafx/2/api/javafx/scene/control/TreeItem.html
+            * https://docs.oracle.com/javafx/2/ui_controls/tree-view.htm
+            *
+            * https://www.twitch.tv/videos/218289099
+            * https://shrek.unideb.hu/~nbatfai/FUTURE6-series1bevezetes.pdf
+            */
+           class FileTree extends javafx.scene.control.TreeView<java.io.File> {
+
+               class FileTreeItem extends javafx.scene.control.TreeItem<java.io.File> {
+
+                   protected boolean leaf = true;
+
+                   public FileTreeItem(java.io.File file, javafx.scene.Node icon) {
+
+                       super(file, icon);
+
+                       leaf = file.isFile();
+
+                   }
+
+                   @Override
+                   public boolean isLeaf() {
+                       return leaf;
+                   }
+
+                   protected boolean treeChanged = true;
+
+                   @Override
+                   public javafx.collections.ObservableList<javafx.scene.control.TreeItem<java.io.File>> getChildren() {
+
+                       if (treeChanged) {
+                           treeChanged = false;
+                           super.getChildren().setAll(buildChildren(this));
+                       }
+                       return super.getChildren();
+                   }
+
+                   private javafx.collections.ObservableList<javafx.scene.control.TreeItem<java.io.File>> buildChildren(
+                           javafx.scene.control.TreeItem<java.io.File> treeItem) {
+
+                       java.io.File file = treeItem.getValue();
+                       if (file != null) {
+                           if (file.isDirectory()) {
+                               java.io.File[] list = file.listFiles();
+                               if (list != null) {
+                                   javafx.collections.ObservableList<javafx.scene.control.TreeItem<java.io.File>> children = javafx.collections.FXCollections
+                                           .observableArrayList();
+
+                                   for (java.io.File f : list) {
+                                       if (f.isDirectory()) {
+                                           children.add(new FileTreeItem(f, new javafx.scene.image.ImageView(actIcon)));
+                                       } else {
+                                           children.add(new FileTreeItem(f, new javafx.scene.image.ImageView(actpropsIcon)));
+                                       }
+
+                                   }
+
+                                   return children;
+                               }
+                           }
+                       }
+
+                       return javafx.collections.FXCollections.emptyObservableList();
+                   }
+
+               }
+
+               protected final javafx.scene.image.Image actIcon = new javafx.scene.image.Image(
+                       getClass().getResourceAsStream("activity.png"));
+
+               protected final javafx.scene.image.Image actpropsIcon = new javafx.scene.image.Image(
+                       getClass().getResourceAsStream("activityprops.png"));
+
+               public void save(javafx.scene.control.TextArea propsEdit, javafx.scene.control.Label actPropsLabel) {
+
+                   String old = actPropsLabel.getText();
+
+                   try {
+                       java.io.File oldf = new java.io.File(old);
+                       if (oldf.exists()) {
+
+                           java.io.FileWriter fileWriter = new java.io.FileWriter(oldf);
+                           fileWriter.write(propsEdit.getText());
+                           fileWriter.close();
+
+                       }
+
+                   } catch (Exception e) {
+
+                       e.printStackTrace();
+                   }
+
+               }
+
+               public FileTree(String cityName, boolean expanded, javafx.scene.control.TextArea propsEdit,
+                       javafx.scene.control.Label actPropsLabel) {
+                   super();
+                   javafx.scene.control.TreeItem<java.io.File> root = new FileTreeItem(new java.io.File(cityName),
+                           new javafx.scene.image.ImageView(actIcon));
+                   root.setExpanded(expanded);
+                   setRoot(root);
+
+                   setCellFactory((javafx.scene.control.TreeView<java.io.File> p) -> new TextFieldTreeCell(propsEdit));
+
+                   setOnMouseClicked((javafx.scene.input.MouseEvent evt) -> {
+
+                       if (evt.getClickCount() == 1) {
+
+                           javafx.scene.control.TreeItem<java.io.File> item = getSelectionModel().getSelectedItem();
+
+                           if (item != null) {
+
+                               java.io.File f = item.getValue();
+
+                               try {
+                                   java.util.Scanner scanner = new java.util.Scanner(f);
+                                   StringBuilder fileContents = new StringBuilder();
+                                   while (scanner.hasNextLine()) {
+                                       fileContents.append(scanner.nextLine());
+                                       fileContents.append(System.getProperty("line.separator"));
+
+                                   }
+                                   scanner.close();
+
+                                   save(propsEdit, actPropsLabel);
+
+                                   actPropsLabel.setText(f.getPath());
+                                   propsEdit.setText(fileContents.toString());
+
+                               } catch (java.io.FileNotFoundException fnfE) {
+
+                                   save(propsEdit, actPropsLabel);
+
+                                   propsEdit.setText("");
+                                   actPropsLabel.setText("");
+
+                               }
+
+                           } else {
+
+                               save(propsEdit, actPropsLabel);
+
+                               propsEdit.setText("");
+                               actPropsLabel.setText("");
+
+                           }
+                       }
+                   });
+
+               }
+
+               private final class TextFieldTreeCell extends javafx.scene.control.TreeCell<java.io.File> {
+
+                   private final javafx.scene.control.TextField textField = new javafx.scene.control.TextField();
+                   private final javafx.scene.control.ContextMenu addMenu = new javafx.scene.control.ContextMenu();
+                   javafx.scene.control.TextArea propsEdit;
+
+                   public TextFieldTreeCell(javafx.scene.control.TextArea propsEdit) {
+                       this.propsEdit = propsEdit;
+                       javafx.scene.control.MenuItem subaMenuItem = new javafx.scene.control.MenuItem("Új altevékenység");// "New
+                                                                                                                          // subactivity");
+                       addMenu.getItems().add(subaMenuItem);
+                       subaMenuItem.setOnAction((javafx.event.ActionEvent evt) -> {
+                           java.io.File file = getTreeItem().getValue();
+
+                           int i = 1;
+                           while (true) {
+                               java.io.File f = new java.io.File(
+                                       file.getPath() + System.getProperty("file.separator") + "Új altevékenység" + i); // PLACEHOLDER
+                                                                                                                        // HERE
+
+                               if (f.mkdir()) {
+                                   javafx.scene.control.TreeItem<java.io.File> newAct
+                                   // rr.println("Cannot create " + f.getPath())rr.println("Cannot create " +
+                                   // f.getPath())rr.println("Cannot create " + f.getPath())rr.println("Cannot
+                                   // create " + f.getPath()) = new javafx.scene.control.TreeItem<java.io.File>(f,
+                                   // new javafx.scene.image.ImageView(actIcon));
+                                   = new FileTreeItem(f, new javafx.scene.image.ImageView(actIcon));
+                                   getTreeItem().getChildren().add(newAct);
+                                   break;
+                               } else {
+                                   i++;
+                                   System.err.println("Cannot create " + f.getPath());
+
+                               }
+                           }
+                       });
+
+                       javafx.scene.control.MenuItem propsMenuItem = new javafx.scene.control.MenuItem(
+                               "Új altevékenység tulajdonságok");
+                       addMenu.getItems().add(propsMenuItem);
+                       propsMenuItem.setOnAction((javafx.event.ActionEvent evt) -> {
+                           java.io.File file = getTreeItem().getValue();
+
+                           java.io.File f = new java.io.File(
+                                   file.getPath() + System.getProperty("file.separator") + "Új altevékenység tulajdonságok");
+
+                           try {
+                               f.createNewFile();
+                           } catch (java.io.IOException e) {
+
+                               System.err.println(e.getMessage());
+
+                           }
+
+                           javafx.scene.control.TreeItem<java.io.File> newProps
+                           // = new javafx.scene.control.TreeItem<java.io.File>(f, new
+                           // javafx.scene.image.ImageView(actpropsIcon));
+                           = new FileTreeItem(f, new javafx.scene.image.ImageView(actpropsIcon));
+                           getTreeItem().getChildren().add(newProps);
+                       });
+
+                   }
+
+                   @Override
+                   public void startEdit() {
+
+                       super.startEdit();
+
+                       editCell();
+
+                       setText(null);
+                       setGraphic(textField);
+                       textField.selectAll();
+                   }
+
+                   @Override
+                   public void cancelEdit() {
+
+                       super.cancelEdit();
+
+                       setText((String) getItem().getPath());
+                       setGraphic(getTreeItem().getGraphic());
+                   }
+
+                   @Override
+                   public void updateItem(java.io.File item, boolean empty) {
+
+                       super.updateItem(item, empty);
+
+                       if (empty || item == null) {
+
+                           setText(null);
+                           setGraphic(null);
+
+                       } else {
+
+                           setText(getItem().toString());
+                           setGraphic(getTreeItem().getGraphic());
+
+                           if (!getTreeItem().isLeaf()) {
+                               setContextMenu(addMenu);
+                           }
+
+                       }
+                   }
+
+                   private void editCell() {
+
+                       if (getItem() == null) {
+                           return;
+                       }
+
+                       String oldText = getItem().toString();
+                       textField.setText(oldText);
+
+                       textField.setOnKeyReleased((javafx.scene.input.KeyEvent t) -> {
+                           if (t.getCode() == javafx.scene.input.KeyCode.ENTER) {
+
+                               String newText = textField.getText();
+
+                               java.io.File newf = new java.io.File(newText);
+                               java.io.File oldf = new java.io.File(oldText);
+                               try {
+                                   if (oldf.isDirectory()) {
+                                       newf.mkdir();
+                                   } else {
+                                       newf.createNewFile();
+                                   }
+                               } catch (java.io.IOException e) {
+
+                                   System.err.println(e.getMessage());
+
+                               }
+
+                               commitEdit(newf);
+                           }
+
+                       });
+
+                   }
+
+               }
+
+           }
+
+           class StringTree extends javafx.scene.control.TreeView<String> {
+
+               protected final javafx.scene.image.Image propIcon = new javafx.scene.image.Image(
+                       getClass().getResourceAsStream("props.png"));
+
+               protected final javafx.scene.image.Image actIcon = new javafx.scene.image.Image(
+                       getClass().getResourceAsStream("activity.png"));
+
+               protected final javafx.scene.image.Image actpropsIcon = new javafx.scene.image.Image(
+                       getClass().getResourceAsStream("activityprops.png"));
+
+               javafx.scene.control.TextArea propsEdit;
+
+               public StringTree(java.util.List<String> properties, boolean expanded, javafx.scene.control.TextArea propsEdit) {
+
+                   super();
+
+                   this.propsEdit = propsEdit;
+
+                   javafx.scene.control.TreeItem<String> root = new javafx.scene.control.TreeItem<String>("Én, magam",
+                           new javafx.scene.image.ImageView(propIcon));
+                   root.setExpanded(expanded);
+                   setRoot(root);
+
+                   for (String prop : properties) {
+
+                       javafx.scene.control.TreeItem<String> where = root;
+
+                       java.util.StringTokenizer st = new java.util.StringTokenizer(prop, "/");
+                       StringBuilder prevTokens = new StringBuilder();
+
+                       while (st.hasMoreTokens()) {
+                           String t = st.nextToken();
+
+                           if (prevTokens.toString().length() > 0) {
+                               prevTokens.append(System.getProperty("file.separator"));
+                           }
+
+                           prevTokens.append(t);
+
+                           t = prevTokens.toString();
+
+                           boolean found = false;
+                           for (javafx.scene.control.TreeItem<String> actNode : where.getChildren()) {
+                               if (actNode.getValue().contentEquals(t)) {
+                                   found = true;
+                                   where = actNode;
+                                   break;
+                               }
+                           }
+                           if (!found) {
+                               javafx.scene.control.TreeItem<String> actNode = new javafx.scene.control.TreeItem<String>(t,
+                                       new javafx.scene.image.ImageView(propIcon));
+                               where.getChildren().add(actNode);
+                               where = actNode;
+
+                           }
+
+                       }
+
+                   }
+
+                   setOnMouseClicked((javafx.scene.input.MouseEvent mouseEvent) -> {
+                       {
+                           if (mouseEvent.getClickCount() == 2) {
+                               javafx.scene.control.TreeItem<String> item = getSelectionModel().getSelectedItem();
+                               if (item != null) {
+                                   propsEdit.appendText(item.getValue());
+                                   propsEdit.appendText(System.getProperty("line.separator"));
+                               }
+                           }
+                       }
+                   });
+
+               }
+
+           }
+
+           public class ActivityEditor extends javafx.application.Application {
+
+               public static void main(String[] args) {
+                   javafx.application.Application.launch(args);
+               }
+
+               @Override
+               public void start(javafx.stage.Stage stage) {
+
+                   java.util.Map<String, String> cmdParams = this.getParameters().getNamed();
+
+                   stage.setTitle("FUTURE 6 - TEV. és TEV. TUL. SZERKESZTŐ/ACT & ACT PROPS EDITOR");
+                   javafx.scene.layout.VBox box = new javafx.scene.layout.VBox();
+                   final javafx.scene.Scene scene = new javafx.scene.Scene(box);
+
+                   String city = "City/";
+                   if (cmdParams.containsKey("city")) {
+                       city = city + cmdParams.get("city");
+                   }
+
+                   String props = "me.props,gaming.props,programming.props";
+                   if (cmdParams.containsKey("props")) {
+
+                       props = cmdParams.get("props");
+
+                   }
+                   java.util.List<String> propsList = java.util.Arrays.asList(props.split(","));
+
+                   java.util.List<String> properties = new java.util.ArrayList<>();
+
+                   for (String p : propsList) {
+
+                       java.io.File f = new java.io.File(p);
+
+                       try {
+                           java.util.Scanner scanner = new java.util.Scanner(f);
+                           while (scanner.hasNextLine()) {
+                               String line = scanner.nextLine();
+                               if (!line.startsWith("//")) {
+                                   properties.add(line);
+                               }
+
+                           }
+                           scanner.close();
+
+                       } catch (java.io.FileNotFoundException fnfE) {
+
+                           fnfE.printStackTrace();
+
+                       }
+
+                   }
+
+                   javafx.scene.control.TextArea propsEdit = new javafx.scene.control.TextArea();
+
+                   javafx.scene.control.TreeView<String> stringTree = new StringTree(properties, true, propsEdit);
+                   stringTree.setEditable(false);
+
+                   javafx.scene.control.Label actPropsLabel = new javafx.scene.control.Label(
+                           "A tevékenységekhez hozzárendelt tulajdonságok");
+
+                   javafx.scene.control.TreeView<java.io.File> fileTree = new FileTree(city, true, propsEdit, actPropsLabel);
+                   fileTree.setEditable(true);
+
+                   box.getChildren().add(new javafx.scene.control.Label("Tulajdonságok fája"));
+
+                   box.getChildren().add(stringTree);
+                   box.getChildren().add(
+                           new javafx.scene.control.Label("Tevékenységek fája és a tevékenységekhez hozzárendelt tulajdonságok"));
+                   box.getChildren().add(fileTree);
+
+                   box.getChildren().add(actPropsLabel);
+                   box.getChildren().add(propsEdit);
+                   box.getChildren().add(new javafx.scene.control.Label(
+                           "FUTURE6: ACT & ACT PROPS EDITOR, (F6ActEdit) v.: 0.0.1, Szerzői jog (C) 2018, GNU GPL v3, Bátfai Norbert, nbatfai@inf.unideb.hu, nbatfai@gmail.com"));
+                   stage.setScene(scene);
+
+                   javafx.geometry.Rectangle2D primaryScreenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+                   stage.setX(primaryScreenBounds.getMinX() + primaryScreenBounds.getWidth() / 5);
+                   stage.setY(primaryScreenBounds.getMinY());
+                   stage.setWidth((primaryScreenBounds.getWidth() * 3) / 5);
+                   stage.setHeight(primaryScreenBounds.getHeight());
+
+                   stage.show();
+               }
+
+           }
+
+            ]]></programlisting>
+            A JavaFX-el elég sok probléma volt, főleg, hogy egyes verzókban nem
+            teljesen úgy működik, ahogyan azt az ember elvárja. A legjobb megoldás
+            az az, hogy a 8-as JDK-t használjuk.
+        </para>
+        <para>
+            Az egyik bug amit megpróbáltam kiküszöbölni, az az volt, hogy amikor
+            egy új tevékenységet akartunk létrehozni, de már volt egy "új áltevékenység"
+            nevű, akkor nem tudott vele mit csinálni, és így egy egyszerű hibát dobott ki.
+        </para>
+        <para>
+            <programlisting language="Java"><![CDATA[
+                int i = 1; while (true) {
+                java.io.File f = new java.io.File(
+                file.getPath() + System.getProperty("file. ←􏰀
+                separator") + "Új altevékenység" + i); // ←􏰀 PLACEHOLDER
+                if (f.mkdir()) { javafx.scene.control.TreeItem<java.io.File> newAct
+                // rr.println("Cannot create " + f.getPath())rr. ←􏰀 println("Cannot create " +
+                // f.getPath())rr.println("Cannot create " + f. ←􏰀 getPath())rr.println("Cannot
+                // create " + f.getPath()) = new javafx.scene. ←􏰀
+                control.TreeItem<java.io.File>(f,
+                // new javafx.scene.image.ImageView(actIcon));
+                = new FileTreeItem(f, new javafx.scene.image. ←􏰀
+                ImageView(actIcon)); getTreeItem().getChildren().add(newAct); break;
+                } else { i++;
+                System.err.println("Cannot create " + f.getPath()); }
+                } });
+                ]]></programlisting>
+        </para>
+        <para>
+            Ez úgy történt meg, hogy létrehoztunk 1 változót, amiben számoljuk
+            (1-től kezdve természetesen), hogy hány új áltevékenységünk van, majd ezt
+            a számot ki is írjuk a végére. Majd amikor létre akarunk hozni egy új
+            áltevákenységet, akkor megnézzük, hogy van e már olyan nevű áltevékenység
+            ahol jelenleg járunk a számlálásnál, ha pedig van, akkor értelemszerűen
+            növeljük a számot 1-el.
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            OOCWC Boost ASIO hálózatkezelése
+        </title>
+        <para>Mutassunk rá a scanf szerepére és használatára!
+            https://github.com/nbatfai/robocar- emulator/blob/master/justine/rcemu/src/carlexer.ll
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            <programlisting language="C++" ><![CDATA[
+            INIT    "<init"
+            ...
+            {INIT}{WS}{WORD}{WS}{INT}{WS}("c"|"g")    {
+                std::sscanf(yytext, "<init %s %d %c>", name, &num, &role);
+                if(num >200)
+                {
+                    m_errnumber = 1;
+                    num = 200;
+                }
+                m_cmd = 1;
+                }
+            ]]></programlisting>
+        </para>
+        
+        <para>
+            A fentebb látható <function>sscanf</function> egy stringből olvas be. Majd tovább nézve láthatjuk, hogy a "yytext" fogja tárolni
+            a standard inputról kapott adatot. Majd megpróbálja kifejezéskre illeszteni a kapott adatot. Ha sikerül akkor meghívja a megfelelő lexer függvényt és eltárolja az adatokat.
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            SamuCam
+        </title>
+        <para>
+           Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a
+           projektben: https://github.com/nbatfai/SamuCam
+        </para>
+        <caution>
+            <title>Tutoriált</title>
+            <para>
+                Ebben a feladatban tutoriált Tóth Attila.
+            </para>
+        </caution>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/nbatfai/SamuCam">Samucam</link>
+        </para>
+        <para>
+            Mivel MacOS Catalina 15.0-án dolgozom, ami nemrég jelent meg így elég
+            sok problémába ütköztem a SamuCam feladat közben. Legelőször gond volt
+            az -'fopenmp' implementációjával Mac-re, majd amikor ezt sikerült
+            nagynehezen megoldanom, jött az opencv4-el való küszködés, amit részben
+            sikerült megoldanom. Majd hiányzott pár alapvető ".h" fájl, amit nem
+            lehetett átlinkelni, mivel ezelőtt a verzió előtt a /usr/local alatt
+            volt az összes header fájl, viszont ebben az új verzióban az Apple
+            úgy gondolta, jó ötlet lesz mindegyiket külön-külön elhelyezni, más
+            mappákba(60+).
+        </para>
+        <para>
+            Ezt nem sikerült kiküszöbölnöm a különböző linkelgetések végett, majd
+            pedig jött a legnagyobb probléma ami a webkamera kezelése volt, ami
+            Mac-en a "VideWriter" segítségével működhetne, viszont mivel ez az OS
+            verzió kb. 2 hetes így még nem jelent meg erre a verzióra. Ennek helyettesítésére
+            nem találtam alternatív megoldást. Így egyik barátom segítségével tudtam
+            megoldani a feladatot.
+        </para>
+        <para>
+                      <mediaobject>
+                              <imageobject>
+                                  <imagedata fileref= "pic/samucam.png"/>
+                              </imageobject>
+                      </mediaobject>
+               </para>
+        <para>
+            A fontosabb részei a programnak azok például azok a részek, ahol az
+            adott felvételnek a tulajdonságait adjuk meg, (pl.fps, magasság, szélesség).
+            Ez így néz ki:
+        </para>
+        <para>
+            <programlisting><![CDATA[
+           void SamuCam::openVideoStream()
+           {
+           videoCapture.open ( 0 );
+           videoCapture.set ( CV_CAP_PROP_FRAME_WIDTH, width );
+           videoCapture.set ( CV_CAP_PROP_FRAME_HEIGHT, height );
+           videoCapture.set ( CV_CAP_PROP_FPS, 10 ); }
+            ]]></programlisting>
+        </para>
+        
+        <para>
+            A képfeldolgozás úgy múködik, hogy megnézi az egyes képkockákat, és ha
+            egy képkockát nem üresnek lát, akkor átméretezi, és "szürkévé" teszi,
+            majd pedig, kiegyenlíti a kép hisztogramját.
+        </para>
+        
+        <para>
+            Az arcunk felismeréséért a <function>detectMultiScale</function> a
+                felelős, ha észrevesz egy arcot, akkor a QImage-ben jeleníti meg.
+        </para>
+            
+        <para>
+            <programlisting><![CDATA[
+                while ( videoCapture.isOpened() ) {
+                     QThread::msleep ( 50 );
+while ( videoCapture.read ( frame ) ) {
+                if ( !frame.empty() ) {
+cv::resize ( frame, frame, cv::Size ( 176, 144 ), 0, 0, cv:: ←􏰀 INTER_CUBIC );
+                std::vector<cv::Rect> faces;
+                cv::Mat grayFrame;
+cv::cvtColor ( frame, grayFrame, cv::COLOR_BGR2GRAY ); cv::equalizeHist ( grayFrame, grayFrame );
+                faceClassifier.detectMultiScale ( grayFrame, faces, 1.1, 4, ←􏰀 0, cv::Size ( 60, 60 ) );
+if ( faces.size() > 0 ) {
+                cv::Mat onlyFace = frame ( faces[0] ).clone();
+QImage* face = new QImage ( onlyFace.data, onlyFace.cols, onlyFace.rows, onlyFace.step,
+                QImage::Format_RGB888 );
+cv::Point x ( faces[0].x-1, faces[0].y-1 );
+                cv::Point y ( faces[0].x + faces[0].width+2, faces[0].y + ←􏰀
+                faces[0].height+2 );
+                cv::rectangle ( frame, x, y, cv::Scalar ( 240, 230, 200 ) ←􏰀
+                );
+emit  faceChanged ( face );
+                }
+QImage* webcam = new QImage ( frame.data, frame.cols, frame.rows, frame.step,
+                QImage::Format_RGB888 );
+                emit  webcamChanged ( webcam );
+}
+                  QThread::msleep ( 80 );
+                }
+if ( ! videoCapture.isOpened() ) {
+                    openVideoStream();
+                  }
+        }}
+                ]]></programlisting>
+        </para>
+    </section>
+    
+    <section>
+        <title>BrainB</title>
+        <para>
+            Mutassuk be a Qt slot-signal mechanizmust ebben a projektben:
+            https://github.com/nbatfai/esport- talent-search
+            </para>
+            <para>
+                Megoldás forrása:
+            </para>
+            <para>
+                Az officiális Qt weboldalon láthatunk egy ábrát, ami remekül
+                bemutatja mi is az a slot-signal.
+            </para>
+            <para>
+                   <mediaobject>
+                           <imageobject>
+                               <imagedata fileref= "pic/slot-signal.png"/>
+                           </imageobject>
+                   </mediaobject>
+            </para>
+            
+            <para>
+                A Qt slot-sginal mechanizmusát különböző objektumok kommunikálására használjuk.
+                Ezt úgy kell érteni, hogy ha egy bizonyos esemény bekövetkezik, akkor
+                az egy "jel"-el jár. A slot-signal mechanizmus pedig lényegében annyi,
+                hogy a slot(sajátokat is létrehozhatunk) funkció segítségével signalokat
+                "foghatunk meg". Egyszerű a használata, mivel az "objecteket"
+                csak össze kell kapcsolnunk azzal a slottal amivel szeretnénk.
+            </para>
+            <para>
+                A csatolt kép alapján is látszik, hogy a szintaxisa eléggé egyszerű
+                mivel, megadjuk, hogy egy bizonyos obejct melyik signálját melyik
+                object slotjával szeretnék összekapcsolni, és ezt a <function>connect</function>
+                -el meg is tudjuk tenni.
+            </para>
+            <para>
+                <programlisting><![CDATA[
+                    connect ( brainBThread, SIGNAL ( heroesChanged ( QImage, int, int ) ←􏰀 ),
+                    this,
+                    SLOT ( updateHeroes ( QImage, int, int ) ) );
+                    
+                    connect ( brainBThread, SIGNAL ( endAndStats ( int ) ),
+                    this,
+                    SLOT ( endAndStats ( int ) ) );
+                ]]></programlisting>
+            </para>
+            
+        </section>
+        
+        <section>
+            <title>
+                OSM térképre rajzolása
+            </title>
+            <para>
+                Debrecen térképre dobjunk rá cuccokat, ennek mintájára, ahol
+                én az országba helyeztem el a DEAC hekkereket:
+                https://www.twitch.tv/videos/182262537
+                (de az OOCWC Java Swinges megjelenítőjéből:
+                https://github.com/nbatfai/robocar-emulator/tree/master/justine/rcwin
+                is kiindulhatsz, mondjuk az komplexebb, mert ott időfejlődés
+                is van...)
+            </para>
+            <para>
+                Megoldás forrása:
+            </para>
+            <para>
+                Tanulságok, tapasztalatok, magyarázat...
+            </para>
+        </section>
+        
+    </chapter>

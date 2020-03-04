@@ -1,0 +1,441 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Gödel!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+      <title>
+          Interfészek. Kollekciók. és 8. hét Funkcionális nyelvi elemek. Lambda kifejezések.
+      </title>
+      
+      <simpara>
+          <emphasis role="strong">
+              <emphasis>
+                 Interfészek:
+              </emphasis>
+          </emphasis>
+      </simpara>
+      <para>
+          A C++ -ban az interfész egy absztrakt osztály,
+          melyben csak virtuális függvények vannak, ez azt jelenti, hogy
+          nem tartalmazhat semmi fajta megvalósítást. Ezeket pedig
+          <function>interface</function> kulcsszóval tudjuk megadni.
+      </para>
+      <simpara>
+          <emphasis role="strong">
+              <emphasis>
+                 Kollekciók:
+              </emphasis>
+          </emphasis>
+      </simpara>
+      <para>
+          A kollekciók valójában adatszerkezetek melyek
+          különböző számú és típusú objektumot/objektumokat képesek
+          együttesen kezelni. Megvalósításuk nehézkes, és bonyolult, mivel
+          az efféle szerkezeteket úgy tudjuk kezelni, hogy szerkezetekre
+          kell bontani, vagy különböző speciális "bit-szintű" megoldások
+          használata szükséges.
+      </para>
+      <simpara>
+          <emphasis role="strong">
+              <emphasis>
+                 Funkcionális nyelvek:
+              </emphasis>
+          </emphasis>
+      </simpara>
+      <para>
+          A funkcionális nyelvek nem annyira széles-
+          körben elterjedtek mint az általunk már használ/ismert nyelvek (Java,
+          C++...). Viszont, egyik nagy előnyeikhez tartozik az a tény, hogy
+          sokkal kevesebb forráskóddal, sok mindent le tudunk bennük írni.
+          Mivel ezek a nyelvek, sokkal közelebb állnak a matematikához, így
+          a matematikai formulák leírása lényegesen egyszerűbb, és könnyen
+          átírhatóak funkcionális nyelvi elemekre.
+      </para>
+      <para>
+          Lejjeb láthatjuk például Erlang-ban egy faktoriális függvény leírását
+          ami eléggé hasonlít egy átlagos matematikai formára.
+           <programlisting language="Erlang"><![CDATA[
+               factorial(0) -> 1;
+               factorial(N) -> N * factorial(N-1).
+               ]]></programlisting>
+      </para>
+      </section>
+    
+    <section>
+        <title>Gengszterek</title>
+        <para>
+           Gengszterek rendezése lambdával a Robotautó Világbajnokságban https://youtu.be/DL6iQwPx1Yw (8:05-től)
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            <programlisting language="java">
+                <![CDATA[
+            std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangster y )
+            {
+                return dst ( cop, x.to ) < dst ( cop, y.to );
+            } );
+                ]]></programlisting>
+        </para>
+        <para>
+            Ebben a feladatban a sort lambda kifejezést fogjuk használni rendezéshez.
+        </para>
+        <para>
+            Van két gangszterünk amelyek paramétert várnak, ráadásul egy objektumot.
+            Majd a <function>dst(cop, x.to)</function> függvény kiszámolja a rendőr
+            és a gangszter távolságát. Ez ugyebár az egyik gangszter távolságát fogja megnézni.
+            Szükségünk van arra, hogy a másik gengszterét is tudjuk, ez lesz a <function>dst(cop, y.to)</function>. És ezáltal, ha az x gangszterünk közelebb van a
+                rendőrhöz mint az y akkor igaz értékkel térünk vissza.
+         </para>
+    </section>
+    
+    <section>
+        <title>C++11 Custom Allocator</title>
+        <para>
+    https://prezi.com/jvvbytkwgsxj/high-level-programming-languages-2-c11-allocators/ a CustomAlloc-os példa, lásd C forrást az UDPROG repóban!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>STL map érték szerinti rendezése</title>
+        <para>
+            Például: https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cpp#L180
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cpp#L180">Fénykard</link>
+        </para>
+        <para>
+            <programlisting language="c++">
+            <![CDATA[
+            std::vector<std::pair<std::string, int>> sort_map ( std::map <std::string, int> &rank )
+            {
+                    std::vector<std::pair<std::string, int>> ordered;
+                    for ( auto & i : rank ) {
+                            if ( i.second ) {
+                                    std::pair<std::string, int> p {i.first, i.second};
+                                    ordered.push_back ( p );
+                            }
+                    }
+                    std::sort (
+                            std::begin ( ordered ), std::end ( ordered ),
+                    [ = ] ( auto && p1, auto && p2 ) {
+                            return p1.second > p2.second;
+                    }
+                    );
+                    return ordered;
+            }
+                    ]]></programlisting>
+        </para>
+        <para>
+            A fénykard rank rendezésbeli algortimusra kell rámutatni, a map érték
+            szerinti rendezésére. De tudnunk kell ehhez mit is jelent a "map".
+            Ez egy olyan tároló, amely kulcsérték és mapped érték párokat tárol.
+        </para>
+        <para>
+            Ahogy láthatjuk a map használta így néz ki: <function>std::map</function>
+            A feladat azt kéri, hogy map érték szerint rendezzük. Így létre kell hoznunk
+            egy map típusú vektort, ebbe a vektorba pedig forech iterátorral a
+            paraméterként megadott map értékeket, adjuk át a vektornak.
+        </para>
+        <para>
+            Ezt a vektort pedig már érték szerint rendezzük. A "sort lambda" segítségével
+            fogjuk ezt megtenni, és a p1.second értéket fogjuk nézni. Ha nagyobb
+            mint a p2.second érték akkor igaz, ellentétes esetben nem. Utoljára pedig
+            a "sort_map" függvény visszatér a rendezett vektorral.
+        </para>
+    </section>
+    
+    <section>
+        <title>Alternatív Tabella rendezése</title>
+        <para>
+          Mutassuk be a https://progpater.blog.hu/2011/03/11/alternativ_tabella a programban a java.lang Interface Comparable T szerepét!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            <programlisting language="java">
+            <![CDATA[
+            class Csapat implements Comparable<Csapat> {
+              protected String nev;
+              protected double ertek;
+              public Csapat(String nev, double ertek) {
+                this.nev = nev;
+                this.ertek = ertek;
+              }
+              public int compareTo(Csapat csapat) {
+                if (this.ertek < csapat.ertek) {
+                  return -1;
+                } else if (this.ertek > csapat.ertek) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              }
+            }
+                    ]]></programlisting>
+        </para>
+        
+        <para>
+            A "comparable" az egy interface amelyet implementálnunk kell az osztályhoz
+            egy "implements" kulcsszóval amit feljebb is láthatunk. Ez az interface
+            egyedül <function>public int compareTo(Csapat csapat)</function> ezt
+            definiálja jelen esetben. A lényege 2 objektum összehasonlítása, majd
+            visszatérésként egy számot kapunk.
+        </para>
+    </section>
+    
+    <section>
+        <title>
+           Prolog családfa</title>
+        <para>
+            Ágyazd be a Prolog családfa programot C++ vagy Java programba! Lásd para_prog_guide.pdf!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>GIMP Scheme hack</title>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv">https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/GIMP_Lisp/Chrome/bhax_chrome3.scm">Króm effekt</link>
+        </para>
+        <para>
+            A következő feladatban is GIMP-et fogunk használni, ráadásul, kipróbáljuk azt, hogy hogyan is hozhatunk létre egy mandalát a programban.</para>
+            <para>A forráskódot bemásolhatjuk akár a Gimps Script-fu konzoljába, és akkor kapunk egy mandalát, de ha személyre szeretnénk szabni, akkor a fájlt a <function>~/.config/GIMP/2.10/scripts</function> helyre kell bemásolnunk, és akkor már a programon belül tudjuk személyre szabni(szín, szöveg, felület, font, stb...).
+        </para>
+            <para>
+                A forráskód így fog kinézni teljes egészében:
+                </para>
+            <programlisting language="lisp"><![CDATA[
+                       ; bhax_chrome3.scm
+                       ;
+                       ; BHAX-Chrome creates a chrome effect on a given text.
+                       ; Copyright (C) 2019
+                       ; Norbert Bátfai, batfai.norbert@inf.unideb.hu
+                       ; Nándor Bátfai, batfai.nandi@gmail.com
+                       ;
+                       ;    This program is free software: you can redistribute it and/or modify
+                       ;    it under the terms of the GNU General Public License as published by
+                       ;    the Free Software Foundation, either version 3 of the License, or
+                       ;    (at your option) any later version.
+                       ;
+                       ;    This program is distributed in the hope that it will be useful,
+                       ;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+                       ;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                       ;    GNU General Public License for more details.
+                       ;
+                       ;    You should have received a copy of the GNU General Public License
+                       ;    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+                       ;
+                       ; Version history
+                       ;
+                       ;  This Scheme code is partially based on the Gimp tutorial
+                       ;  http://penguinpetes.com/b2evo/index.php?p=351
+                       ;  (the interactive steps of this tutorial are written in Scheme)
+                       ;
+                       ;  https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv
+                       ;
+                       (define (color-curve)
+                           (let* (
+                               (tomb (cons-array 8 'byte))
+                           )
+                               (aset tomb 0 0)
+                               (aset tomb 1 0)
+                               (aset tomb 2 50)
+                               (aset tomb 3 190)
+                               (aset tomb 4 110)
+                               (aset tomb 5 20)
+                               (aset tomb 6 200)
+                               (aset tomb 7 190)
+                           tomb)
+                       )
+                       ;(color-curve)
+                       (define (elem x lista)
+                           (if (= x 1) (car lista) (elem (- x 1) ( cdr lista ) ) )
+                       )
+                       (define (text-wh text font fontsize)
+                       (let*
+                           (
+                               (text-width 1)
+                               (text-height 1)
+                           )
+                       
+                           (set! text-width (car (gimp-text-get-extents-fontname text fontsize PIXELS font)))
+                           (set! text-height (elem 2  (gimp-text-get-extents-fontname text fontsize PIXELS font)))
+                           
+                           (list text-width text-height)
+                           )
+                       )
+                       ;(text-width "alma" "Sans" 100)
+                       (define (script-fu-bhax-chrome text font fontsize width height color gradient)
+                       (let*
+                           (
+                               (image (car (gimp-image-new width height 0)))
+                               (layer (car (gimp-layer-new image width height RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL-LEGACY)))
+                               (textfs)
+                               (text-width (car (text-wh text font fontsize)))
+                               (text-height (elem 2 (text-wh text font fontsize)))
+                               (layer2)
+                           )
+                           
+                           ;step 1
+                           (gimp-image-insert-layer image layer 0 0)
+                           (gimp-context-set-foreground '(0 0 0))
+                           (gimp-drawable-fill layer  FILL-FOREGROUND )
+                           (gimp-context-set-foreground '(255 255 255))
+                       
+                           (set! textfs (car (gimp-text-layer-new image text font fontsize PIXELS)))
+                           (gimp-image-insert-layer image textfs 0 0)
+                           (gimp-layer-set-offsets textfs (- (/ width 2) (/ text-width 2)) (- (/ height 2) (/ text-height 2)))
+                       
+                           (set! layer (car(gimp-image-merge-down image textfs CLIP-TO-BOTTOM-LAYER)))
+                       
+                           ;step 2
+                           (plug-in-gauss-iir RUN-INTERACTIVE image layer 15 TRUE TRUE)
+                       
+                           ;step 3
+                           (gimp-drawable-levels layer HISTOGRAM-VALUE .11 .42 TRUE 1 0 1 TRUE)
+                       
+                           ;step 4
+                           (plug-in-gauss-iir RUN-INTERACTIVE image layer 2 TRUE TRUE)
+                           ;step 5
+                           (gimp-image-select-color image CHANNEL-OP-REPLACE layer '(0 0 0))
+                           (gimp-selection-invert image)
+                           ;step 6
+                           (set! layer2 (car (gimp-layer-new image width height RGB-IMAGE "2" 100 LAYER-MODE-NORMAL-LEGACY)))
+                           (gimp-image-insert-layer image layer2 0 0)
+                           ;step 7
+                           (gimp-context-set-gradient gradient)
+                           (gimp-edit-blend layer2 BLEND-CUSTOM LAYER-MODE-NORMAL-LEGACY GRADIENT-LINEAR 100 0 REPEAT-NONE
+                               FALSE TRUE 5 .1 TRUE width (/ height 3) width  (- height (/ height 3)))
+                           
+                           ;step 8
+                           (plug-in-bump-map RUN-NONINTERACTIVE image layer2 layer 120 25 7 5 5 0 0 TRUE FALSE 2)
+                       
+                           ;step 9
+                           (gimp-curves-spline layer2 HISTOGRAM-VALUE 8 (color-curve))
+                           
+                           (gimp-display-new image)
+                           (gimp-image-clean-all image)
+                           )
+                       )
+                       ;(script-fu-bhax-chrome "Bátf41 Haxor" "Sans" 120 1000 1000 '(255 0 0) "Crown molding")
+                       (script-fu-register "script-fu-bhax-chrome"
+                           "Chrome3"
+                           "Creates a chrome effect on a given text."
+                           "Norbert Bátfai"
+                           "Copyright 2019, Norbert Bátfai"
+                           "January 19, 2019"
+                           ""
+                           SF-STRING       "Text"      "Bátf41 Haxor"
+                           SF-FONT         "Font"      "Sans"
+                           SF-ADJUSTMENT   "Font size" '(100 1 1000 1 10 0 1)0"
+                           SF-VALUE        "Width"     "1000"
+                           SF-VALUE        "Height"    "1000"
+                           SF-COLOR        "Color"     '(255 0 0)
+                           SF-GRADIENT     "Gradient"  "Crown molding"
+                       )
+                       (script-fu-menu-register "script-fu-bhax-chrome"
+                           "<Image>/File/Create/BHAX"
+                       )
+                   ]]></programlisting>
+       <para>
+           A program elején definiáljuk a <function>color-curve</function> függvényt.
+           Ez egy 8 elemű tömb lesz. Azután különböző értékeket adunk meg neki. Itt a színátmenet lesz a fontos.
+       </para>
+       <para>
+           3 paraméterre lesz szükségünk, mégpedig: Az általunk megválasztott szöveg, a betűstílus, illetve a szöveg mérete.
+           A <function>text-width</function> és a <function>text.height</function>
+           értékeit 1-re tesszük, majd a "set!" segítségével a további értékeeket állítjuk be.
+       </para>
+       <para>
+       A chrome Króm effekt megírása itt fog történni:
+       </para>
+       <programlisting language="lisp"><![CDATA[
+                  (define (script-fu-bhax-chrome text font fontsize width height color gradient)
+                  (let*
+                      (
+                          (image (car (gimp-image-new width height 0)))
+                          (layer (car (gimp-layer-new image width height RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL-LEGACY)))
+                          (textfs)
+                          (text-width (car (text-wh text font fontsize)))
+                          (text-height (elem 2 (text-wh text font fontsize)))
+                          (layer2)
+                      )
+                      
+                      ;step 1
+                      (gimp-image-insert-layer image layer 0 0)
+                      (gimp-context-set-foreground '(0 0 0))
+                      (gimp-drawable-fill layer  FILL-FOREGROUND )
+                      (gimp-context-set-foreground '(255 255 255))
+                  
+                      (set! textfs (car (gimp-text-layer-new image text font fontsize PIXELS)))
+                      (gimp-image-insert-layer image textfs 0 0)
+                      (gimp-layer-set-offsets textfs (- (/ width 2) (/ text-width 2)) (- (/ height 2) (/ text-height 2)))
+                  
+                      (set! layer (car(gimp-image-merge-down image textfs CLIP-TO-BOTTOM-LAYER)))
+                  
+                      ;step 2
+                      (plug-in-gauss-iir RUN-INTERACTIVE image layer 15 TRUE TRUE)
+                  
+                      ;step 3
+                      (gimp-drawable-levels layer HISTOGRAM-VALUE .11 .42 TRUE 1 0 1 TRUE)
+                  
+                      ;step 4
+                      (plug-in-gauss-iir RUN-INTERACTIVE image layer 2 TRUE TRUE)
+                      ;step 5
+                      (gimp-image-select-color image CHANNEL-OP-REPLACE layer '(0 0 0))
+                      (gimp-selection-invert image)
+                      ;step 6
+                      (set! layer2 (car (gimp-layer-new image width height RGB-IMAGE "2" 100 LAYER-MODE-NORMAL-LEGACY)))
+                      (gimp-image-insert-layer image layer2 0 0)
+                      ;step 7
+                      (gimp-context-set-gradient gradient)
+                      (gimp-edit-blend layer2 BLEND-CUSTOM LAYER-MODE-NORMAL-LEGACY GRADIENT-LINEAR 100 0 REPEAT-NONE
+                          FALSE TRUE 5 .1 TRUE width (/ height 3) width  (- height (/ height 3)))
+                      
+                      ;step 8
+                      (plug-in-bump-map RUN-NONINTERACTIVE image layer2 layer 120 25 7 5 5 0 0 TRUE FALSE 2)
+                  
+                      ;step 9
+                      (gimp-curves-spline layer2 HISTOGRAM-VALUE 8 (color-curve))
+                      
+                      (gimp-display-new image)
+                      (gimp-image-clean-all image)
+                      )
+                  )
+                  ;(script-fu-bhax-chrome "Bátf41 Haxor" "Sans" 120 1000 1000 '(255 0 0) "Crown molding")
+              ]]></programlisting>
+       <para>
+           Itt a "script-fu-bhax-chrome" függvény 7 paramétert szab meg:
+           szöveg, betűstílus, betűméret, szélesség, magasság, színskála, stílus.
+       </para>
+    </section>
+    
+</chapter>
+
+
+
+
+

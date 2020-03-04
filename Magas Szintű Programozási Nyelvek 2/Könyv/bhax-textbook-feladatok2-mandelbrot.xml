@@ -1,0 +1,306 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>
+            Helló, Mandelbrot!
+        </title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    
+    <section>
+        <title>
+          Modellező eszközök és nyelvek. Az UML és az UML osztálydiagramja.
+        </title>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Modellező eszközök és nyelvek:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Egyre többet és egyre gyakrabban hallhatunk az UML (Unified Modeling
+            Language) modellező nyelvekről. Amelyek valójában tervezést, dokumentálást,
+            tesznek lehetővé.  Fontos egy pár "szabály" melyek alapján vannak
+            kialakítva a modellező nyelvek elemei:
+        </para>
+        <para>
+            - viszonylag kevés szimbólummal rendelkezzen
+        </para>
+        <para>
+            - általánosan használható, feladatra szabható és pontosítható legyen
+        </para>
+        <para>
+            - széles körben legyen használható és megérthető
+        </para>
+        <para>
+            - egyésgesen értelmezhető legyen
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    UML:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Az UML (Unified Modeling Language) egy általános célú modellező nyelv
+            elemzők, tervezők és mérnökök számára(legfőbbképpen).
+        </para>
+        <para>
+            Az UML egy objektum orientált modellező eszköz/megoldás arra, hogy
+            különböző programrendszerek modelljait vizuálisan tudjuk dokumentálni,
+            ezáltal könnyebben megérteni és felfogni azt. Szöveges és grafikus modellek
+            is készíthetőek segítségével.
+        </para>
+        <para>
+            Az UML grafikus jelöléseket használ, különféle rendszerek könnyebb átláthatósága
+            miatt. Az UML modellek UML jelölést használó diagramokból állnak.
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Az UML osztálydiagramja:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+          Az UML egyik leggyakrabban használt diagramtípusa az osztálydiagram.
+          Valójában osztályokat és azoknak a kapcsolatait ábrázolja grafikusan.
+        </para>
+        <para>
+            Fontos megjegyezni, hogy az az "osztály" fogalom amit az OO programozásból
+            már ismerünk az nem teljesen azonos az UML-ben használt "osztály" fogalmával,
+            hiszen itt attól általánosabb értelemben használatos, ugyanis itt az
+            osztály egy rendszer statikus vagy strukturális összetevője.
+        </para>
+        
+    </section>
+
+    <section>
+        <title>
+            Reverse engineering UML osztálydiagram
+        </title>
+        <para>
+            UML osztálydiagram rajzolása az első védési C++ programhoz. Az
+            osztálydiagramot a forrásokból generáljuk (pl. Argo UML, Umbrello,
+            Eclipse UML) Mutassunk rá a kompozíció és aggregáció kapcsolatára a
+            forráskódban és a diagramon, lásd még: https://youtu.be/Td_nlERlEOs.
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_6.pdf
+            (28-32 fólia)
+        </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://github.com/fulekylaszlo/Prog2/blob/master/source/2.Mandelbrot/Binfa/z3a7.cpp">Első védési C++ program</link>
+        </para>
+        <para>
+            Mivel az első védési C++ programot kell felhasználnunk ami már
+            tárgyalva volt a könyv korábbi részeiben, ezért nem magyaráznám el megint.
+        </para>
+        <para>
+            Ebből a forráskódból kell UML osztálydiagramot kirajzolnunk. Többször
+            említettem, hogy MacOS-en dolgozom, jelenleg egy frissebb verzion
+            (10.15) mint eddig, így legalkalmasabbnak és legkönnyebbnek a Visual paradigm
+            program használatát véltem amit kiadtak MAC-re is.
+        </para>
+        <para>
+                  A program használata nagyon egyszerű, leírom gyorsan a menetét,
+                  a lényeg, hogy :
+              </para>
+              <para>
+                  Tools-->Instant Reverse--> "kiválasztjuk a kódunkat és végig OKézzuk".
+                  Majd ezután meg is jelenik a diagramunk.
+              </para>
+        <para>
+                      <mediaobject>
+                              <imageobject>
+                                  <imagedata fileref= "pic/Binfareverse.png" width="100%"/>
+                              </imageobject>
+                      </mediaobject>
+               </para>
+        <para>
+            A két osztályunk (LZWBinfa és Csomópont) egy-egy téglalappal van jelölve
+            az ábrán. A binfa osztály és a csomópont osztály egymást közti kapcsolatát
+            a nyilak jelzik(jelen esetben egy folytonos), mivel a csomópont osztály
+            nélkül nem is binfáról beszélnénk.
+        </para>
+        <para>
+            Amit még láthatunk az az, hogy a csomópont osztálynál látunk 2 nyilat
+            ami önmagába a csomópont osztályba megy, ez azért van, mert a csomópont
+            rekurzív módon tud hivatkozni a bal és jobb gyermekeire.
+        </para>
+        <para>
+            A diagramok legfelső részében az osztály nevét láthatjuk, alatta az adattagok
+            következnek, majd pedig a metódusok.
+        </para>
+        <para>
+            3 féle különböző jelet láthatunk még: +, -, #. Ezek a láthatósági jogok.
+        </para>
+        <para>
+            + : public
+        </para>
+        <para>
+            - : private
+        </para>
+        <para>
+            # : protected
+        </para>
+        
+    </section>        
+
+    <section>
+        <title>Forward engineering UML osztálydiagram</title>
+        <para>
+            UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Mandelbrot/Forward">FWDE UML</link>
+        </para>
+        <para>
+            Ebben a példában is a Visual Paradigm nevezűt programot használtam,
+            és egy videó tutoriál alapján csináltam meg. Először diagramok segítségével
+            létrehoztam 2 osztályt majd ezeknek adtam egy attribútumot és már készen is voltam.
+            Most már csak ugyan az volt a teendő mint a feljebb látható feladatban:
+        </para>
+        <para>
+        <link xlink:href="https://www.youtube.com/watch?v=efd0wEYkUk0">Tutorial</link>
+        </para>
+        <para>
+            Tools-->Instant Reverse--> És meg is vannak a forrásaink/osztályaink a kiválasztott
+            mappában.
+        </para>
+        <para>
+            Nagyon egyszerű a példa, a könnyebb áttekintés miatt.
+        </para>
+            <para>
+                   <mediaobject>
+                           <imageobject>
+                               <imagedata fileref= "pic/forward.png" width="100%"/>
+                           </imageobject>
+                   </mediaobject>
+            </para>
+    </section>        
+    
+    <section>
+        <title>Egy esettan</title>
+        <para>
+            A BME-s C++ tankönyv 14. fejezetét (427-444 elmélet, 445-469 az esettan)
+            dolgozzuk fel!
+        </para>
+        <para>
+            A könyvet olvasva sok olyan információt kaptam, amit már alapból
+            tudtam, hisz kellett a fentebb látható olvasónaplós feladathoz,
+            illetve a forráskód feladatokhoz is, ezért ezeket az alapvető
+            dolgokat, hogy UML fogalma, osztálydiagram, láthatósági jogok,
+            nem magyaráznám el ismételten. Feljebb megtalálható.
+        </para>
+        <para>
+            Tovább olvasva viszont kapunk egy feladatot, mégpedig, hogy van egy
+            kereskedésünk, mely számítógép- konfigurációk értékesítésével foglalkozik.
+            Kell készítenünk egy olyan alkalmazást, amely lehetőséget ad, az alkatrészek
+            és konfigurációk nyilvántartására.
+        </para>
+        <para>
+            Ahogyan a fejezetben is olvashtjuk előre gondolkodunk, és alapból
+            úgy írjuk meg a programunkat, hogy később is lehessen új termékeket
+            hozzáadni a listánkhoz. Erről fog gondoskodni a <function> Product
+            </function> osztályunk. Viszont előtte még a keretrendszert kell
+            létrehoznunk. Ha megvan a keretrendszerünk és az osztálycsaládok,
+            akkor foglalkozhatunk a feljebb említett osztályunkkal. Itt lesznek
+            tárolva a termékek tulajdonságai(ár, a beszerzés dátuma, stb..). Termékeket
+            a listánkhoz majd az <function>AddPart</function>-al tudunk hozzáadni.
+        </para>
+        <para>
+            Majd létrehozunk egy <function>ProductInventory</function> osztályt, ami
+            a nyilvántartás feladatát fogja ellátni. Tárolni/listázni fogja a termékeket.
+        </para>
+        <para>
+            A végefelé pedig már csak pár tanácsot/tippet olvashatunk.
+        </para>
+    </section>
+    
+    <section>
+        <title>BPMN</title>
+        <para>
+            Rajzoljunk le egy tevékenységet BPMN-ben!
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf
+            (34-47 fólia)
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Egy BPMN tevékenységre én egy online eszközt használtam :
+            <link xlink:href="https://bpmn.studio/">BPMN editor</link>
+        </para>
+        <para>
+            Egy egyszerű regisztráció után már használhatjuk is az editort, ami
+            átlátható és egyszerű kezelni.
+        </para>
+        <para>
+            Lejjeb látható egy grafikus modell egy egyszerű utazás/nyaralás lefoglalására.
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/BPMN.png" width="100%"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+        <para>
+            A képünk két fő részből áll, az egyik(felső) egy utazási irodát szimbolizál,
+            a másik(alsó) pedig a kliens aki szolgáltatást szeretne az utazási irodától.
+        </para>
+        <para>
+            Magától értetődő, hogy a nyilak a folyamat menetét jelzik. Majd
+            az egész folyamat egy <function>zöld kör</function>-rel kezdődik, ez
+            ezt is jelzi. Ezt követi egy <function>szürke téglalap</function>, ez
+            feladatokat jelent, ahogyan az ábra szerint is láthatjuk. Láthatunk még
+            egy <function>kék négyszöget egy plusz jellel</function>, ez egy "elágazás/átjáró",
+            jelen esetben egy párhuzamos folyamatnak a kezdetét és végét jelzi.
+            Majd látható egy <function>szürke kör</function> ami valamilyen fajta
+            eseményt/cselekvést jelent. Végül pedig a <function>piros kör</function>
+            ami pedig az egész folyamat végét jelzi.
+        </para>
+        <para>
+            Majd pedig még csatolok is egy kissebb jelmagyarázatot. Általában az
+            ilyen editorokban a jelek megegyeznek vagy legalábbis nagyon hasonlóak.
+        </para>
+        <para>
+                      <mediaobject>
+                              <imageobject>
+                                  <imagedata fileref= "pic/BPMNmagy.png" width="50%"/>
+                              </imageobject>
+                      </mediaobject>
+               </para>
+        
+    </section>
+    
+    <section>
+        <title>TeX UML</title>
+        <para>
+         Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az
+         OOCWC projektről (pl. use case és class diagramokat).
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+                    
+</chapter>                
+
+

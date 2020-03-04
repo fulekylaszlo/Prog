@@ -1,0 +1,131 @@
+<revhistory xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <revision>
+        <revnumber>0.0.1</revnumber>
+        <date>2019-02-12</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Az iniciális dokumentum szerkezetének kialakítása.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.2</revnumber>
+        <date>2019-02-14</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Inciális feladatlisták összeállítása.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.3</revnumber>
+        <date>2019-02-16</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Feladatlisták folytatása.
+            Feltöltés a BHAX csatorna 
+            <link xlink:href="https://gitlab.com/nbatfai/bhax">https://gitlab.com/nbatfai/bhax</link>
+            repójába.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.4</revnumber>
+        <date>2019-02-19</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Aktualizálás, javítások.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.5</revnumber>
+        <date>2019-02-26</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Turing csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.6</revnumber>
+        <date>2019-03-06</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Chomsky csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.7</revnumber>
+        <date>2019-03-13</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+           Turing csokorban kissebb változások és a Caesar csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.8</revnumber>
+        <date>2019-03-20</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Mandelbrot csokor befejezve valamint feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.9</revnumber>
+        <date>2019-03-27</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Welch csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.10</revnumber>
+        <date>2019-04-02</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Conway csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.11</revnumber>
+        <date>2019-04-10</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Schwarzenegger csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.12</revnumber>
+        <date>2019-04-11</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Gutenberg csokor feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.0.13</revnumber>
+        <date>2019-04-17</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            Chaitin csokor elkészítése és feltöltése GitHub-ra.
+        </revremark>
+    </revision>
+    
+    <revision>
+        <revnumber>0.1.0</revnumber>
+        <date>2019-05-9</date>
+        <authorinitials>fulekylaszlo</authorinitials>
+        <revremark>
+            A könyv teljes elkészülte.
+        </revremark>
+    </revision>
+    
+</revhistory>

@@ -1,0 +1,231 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Gutenberg!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+        <cover>
+            <para>
+                Programozás tankönyvek rövid olvasónaplói.
+            </para>
+        </cover>
+    </info>
+    <section>
+        <title>Programozási alapfogalmak</title>
+        <para>         
+            <citation>PICI</citation>       
+        </para>
+        <para>
+            A programozási nyelveknek 3 szintjét különböztetjük meg:
+        </para>
+        <para>
+            - Gépi nyelv
+         </para>
+        <para>
+            - Assembly szintű nyelv
+        </para>
+        <para>
+            - Magas szintű nyelv
+        </para>
+        <para>
+            A magas szintű programozási nyelven megírt programokat forrásprogramoknak illetve forrásszövegeknek nevezzük, de inkább az első verzió a használatosabb. A forrásprogramokból pedig el kell jutnunk egy gépi nyelvű programokig, amit a számítógépünk is értelmezni tud. Ezt fordítóprogramok segítségével tudjuk megtenni.  A fordítóprogram különböző lépéseken megy keresztül:
+         </para>
+        <para>
+            - Lexikális elemzés
+        </para>
+        <para>
+            - Szintaktikai elemzés
+        </para>
+        <para>
+            - Szemantikai elemzés
+        </para>
+        <para>
+            - Kódgenerálás
+        </para>
+        <para>
+            Továbbá minden forrásprogramnak vannak kissebb alkotórészei, a legkisebbek a karakterek. Az eljáráorientált nyelvek esetén a karakterkészlet így néz ki:
+        </para>
+        <para>
+            - Lexikális egységek
+        </para>
+        <para>
+            - Szintaktikai egységek
+        </para>
+        <para>
+            - Utasítások
+        </para>
+        <para>
+            - Programegységek
+        </para>
+        <para>
+            - Fordítási egységek
+        </para>
+        <para>
+            - Program
+        </para>
+        <para>
+            A C programozási nyelvben az alapelemek így néznek ki:
+        </para>
+        <para>
+           <emphasis role="strong">Aritmetikai típusok</emphasis>
+        </para>
+            <para>
+                    - Egész
+            </para>
+            <para>
+                    - Karakter
+            </para>
+            <para>
+                    - Valós
+            </para>
+        <para>
+           <emphasis role="strong">Származtatott típusok</emphasis>
+        </para>
+            <para>
+                    - Tömb
+            </para>
+            <para>
+                    - Függvény
+            </para>
+            <para>
+                    - Mutató
+            </para>
+            <para>
+                    - Struktúra
+            </para>
+            <para>
+                    - Union
+            </para>
+        <para>
+            <emphasis role="strong">Void típus</emphasis>
+        </para>
+       
+    </section>        
+    <section>
+        <title>Programozás bevezetés</title>
+        <para>                
+            <citation>KERNIGHANRITCHIE</citation>
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/zmfT9miB-jY">https://youtu.be/zmfT9miB-jY</link>
+        </para>
+        <para>
+            Az első fejezetben, egyből láthatunk egy egyszerű kis C programot, ami így néz ki:
+        </para>
+            <programlisting language="c"><![CDATA[
+                #include <stdio.h>
+                
+                main()
+                {
+                printf("Halló mindenki!\n");
+                }
+               ]]></programlisting>
+           <para> ez egy egyszerű szöveg kiiratása, talán amit mindenki ismer még aki nem is programozó a: "Hello World". Ezt követve megtudjuk, hogyan kell fordítanunk és futtatnunk a forráskódunkat, majd a végeredményt is láthatjuk.
+            </para>
+        <para>
+            Ezt követően megtanuljuk az alapvető utasításokat, hogy hogyan tudjuk a kiirandó szövet változtatni (új sorba rakni, stb..), megtanuljuk, hogyan kommentelhetünk a forráskódunkba ami egyébként egy rendkívül hasznos dolog, hiszen nagyon száraz látni egy forráskódot, midnenféle magyarázat nélkül. Megtanuljuk a változók használatát, különbőző utasításokat mint pl. ( while, for, stb..), továbbá még a változók típusaival is megismerkedünk, valamint, hogy hogyan ágyazzuk be a különböző függvénykönyvtárakat és, hogyan használjuk a <function>define</function> név helyettesítő szöveget.
+        </para>
+        <para>Apróbb programokat írunk meg közben, mint pl. (karakterek számlálása, sorok számlálása). Majd ezt követően a tömbökkel foglalkozunk és ezáltal megtanulunk létrehozni különböző tömböket valamint ezzel párhuzamosan az <function>IF</function> függvény többszöri egybeágyazását (Nested-IF) is gyakoroljuk.
+        </para>
+        <para>
+            A második fejezet elején a változó típusokkal foglalkozunk és definíció szerint meg is tanuljuk őket a fejezet során.
+        </para>
+            <programlisting language="c"><![CDATA[
+               char
+               int
+               float
+               double
+            ]]></programlisting>
+            <para>Valamint ezekhez hozzájöhetnek specifikációk mint pl.
+            </para>
+            <programlisting language="c"><![CDATA[
+               short
+               long
+               signed
+               unsigned
+            ]]></programlisting>
+            <para>A fejezetet tovább olvasva a deklarációkról olvashatunk, megtanuljuk a különböző logikai operátorokat és használatukat is:
+            </para>
+            <programlisting language="c"><![CDATA[
+                >
+                >=
+                <=
+                <
+            ]]></programlisting>
+           <para> Majd különböző értékadó operátorokat és kifejezésket nézünk meg.
+        </para>
+            <para>A harmadik fejezetben legelőször az utasításokkal foglalkozunk részletesebben ( IF, IF- else, switch, case), hogy hogyan is hazsnáljuk őket helyesen és mikor érdemes őket használni. Majd különböző ciklusokat írunk a (while és for) utasításokkal. Ezt követően megnézzük ezeket a ciklusokat (do-while) utasításokkal is.
+            </para>
+            <para>Miután már tisztában vagyunk az utasításokkal ezután a (break, continue) utasításokat nézzük át kis forráskódokban.
+            </para>
+            <para> A negyedik fejezet a függvényekről szól és a valük kapcsolatos alapfogalmakkal. Tovább olvasva a header állományokkal foglalkozunk:
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref= "./pic/header.png"/>
+                    </imageobject>
+                </mediaobject>
+            </para>
+            <para> Majd a különböző változótípusokkal folytatjuk. Továbbá kiemelném a "Rekurzió"-s részt amit fontosnak tartok és mehetünk is tovább a következő fejezetre.
+            </para>
+            <para>A következő fejezetben a mutatók és tömbök kapnak főszerepet. Megtanuljuk kezelni a mutatókat és függvényargumentumokat, valamint belemerülünk a tömbökbe illetve többdimenziós tömbökbe is. Mint eddig is itt is nagy segítségünkre lesznek a kis kódcsipetek melyek szemléletesen bemutatják egy egy kis szakasz illetve lényeges rész működését.
+            </para>
+            <para>A hatodik fejezetben a struktútákkal fogunk foglalkozni, először is az alapfogalmakkal:
+            </para>
+                <programlisting language="c"><![CDATA[
+                    struct pont
+                    {
+                    int x;
+                    int y;
+                    };
+                ]]></programlisting>
+               <para> Majd különböző olyan dolgokkal foglalkozunk mint például a "Struktúrák és függvények" , "Struktúratömbök". Majd ezt követően rátérünk a <function>typedef</function> utasításra
+            </para>
+             <para> A következő hetedik fejezetben az adatbevitel és adatkivitel a főbb témánk. Itt kitárgyalunk olyan utasításokat mint a (printf, scanf, stb..). Megtanuljuk, hogy a programunkból, hogyan féhetünk hozzá különböző adatállományokhoz. Majd egy fontos rész követi ezt a "Hibakezelés"
+             </para>
+             
+             <para>Majd az utolsó nyolcadik fejezetben az UNIX alapú operációs rendszerekről beszélünk, különböző rendszerhívásokkal, különböző fügvényekkel  és kiiratásokkal zárjuk az utolsó fejezetünket.
+             </para>
+             </section>
+    <section>
+        <title>Programozás</title>
+        <para>                
+            <citation>BMECPP</citation>
+        </para>
+        <para>
+        A legfontosabb rész amivel ebben a könyvben találkozunk az a hibakezelés. Először tisztában leszünk azzal, hogy hogyan néz ki egy hibakezelés folyamata, valamint pár példa programkódokat is kapunk.
+        </para>
+            <para> Majd ezt követően a hibakezelés alapjaival fogunk foglalkozni. A legismertebb kivételkezelési módszer a try/catch módszer mely úgy fut le, hogy a forráskódunkba beépítünk egy try/catch blokkot, majd amikor hiba keletkezik a forráskódunkban ez a blokk ezt elfogja és a forráskódunk csak akkor fog minden gond nélkül lefutni miután már a try/catch blokk lefutott.
+             </para>
+            <para>
+                Nézzünk egy példát:
+                </para>
+            <para>
+                <link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/LZW%20Binf%C3%A1s%20V%C3%A9d%C3%A9s%20Programja(kiv%C3%A9telkezel%C3%A9s).cpp">Kivételkezelés</link>
+                </para>
+            <para> A forráskódban szemléletesen láthatjuk is a try/catch blokkot.
+            </para>
+            <programlisting language="c"><![CDATA[
+                int
+                main (int argc, char *argv[]) {
+                try {
+                .
+                .
+                .
+                .
+                
+            ]]></programlisting>
+            <para> Valamint a catch része:
+           </para>
+            <programlisting language="c"><![CDATA[
+                catch (std::invalid_argument& e)
+                {
+                std::cout << e.what() << std::endl;
+                }
+                catch (std::ios::failure& e)
+                {
+                std::cout << e.what() << std::endl;
+                }
+            ]]></programlisting>
+        
+    </section>
+</chapter>

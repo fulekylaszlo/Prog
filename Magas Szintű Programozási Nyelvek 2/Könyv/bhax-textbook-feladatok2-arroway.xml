@@ -1,0 +1,530 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>
+            Helló, Arroway!
+        </title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        
+        <title>
+            Az objektumorientált paradigma alapfoglamai. Osztály, objektum, példányosítás.
+        </title>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Mielőtt bővebben foglalkoznánk az objetumorientált programozással, tisztázzunk pár fontosabb alapfogalmat.
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Programozási pardigma:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Ezalatt a program felépítésére használt
+            eszközkészletet értjük, vagyis mik képezik a program alkotóelemeit.
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Osztály:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Olyan felhasználói típus mely alapján objektumok
+            hozhatóak létre. Valójában adat és metódus definíciókat tartalmaz.
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Objektum:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Információkat tárol, és kérésre műveleteket végez el.
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Példányosítás:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Egy egyszerű példával magyaráznám el. Ha van
+            egy osztályunk, például "Állatok" akkor ennek az osztálynak a
+            példányai lehetnek az, hogy "Kutya" és "Macska". Ezáltal együtt
+            kezelhetőek lábszám, vagy szempár alapján, vagy akár szín alapján.
+        </para>
+        
+    </section>
+    
+    <section>
+        <title>
+            OO szemlélet
+        </title>
+        <para>
+            A módosított polártranszformációs normális generátor beprogramozása
+            Java nyelven. Mutassunk rá, hogy a mi természetes saját megoldásunk
+            (az algoritmus egyszerre két normálist állít elő, kell egy példánytag,
+            amely a nem visszaadottat tárolja és egy logikai tag, hogy van-e
+            tárolt vagy futtatni kell az algot.) és az OpenJDK, Oracle JDK-ban a
+            Sun által adott OO szervezés ua.!
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_5.pdf
+            (16-22 fólia) Ugyanezt írjuk meg C++ nyelven is!
+            (lásd még UDPROG repó: source/labor/polargen)
+        </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Arroway/Polargen">Polargen</link>
+        </para>
+        <para>
+            A forráskód javában így fog kinézni:
+            <programlisting language="Java" ><![CDATA[
+                import static java.lang.System.*;
+                class PolarGen
+                 {
+                     boolean nincsTarolt = true;
+                     double tarolt;
+                     public PolarGen()
+                     {
+                         nincsTarolt = true;
+                     }
+                     public double kovetkezo()
+                     {
+                         if(nincsTarolt)
+                         {
+                             double u1, u2, v1, v2, w;
+                             do {
+                                u1 = Math.random();
+                                u2 = Math.random();
+                                v1 = 2 * u1 - 1;
+                                v2 = 2 * u2 - 1;
+                                w = v1 * v1 + v2 * v2;
+                             }
+                             while (w > 1);
+                             double r = Math.sqrt((-2 * Math.log(w)) / w);
+                             tarolt = r * v2;
+                             nincsTarolt = !nincsTarolt;
+                             return r * v1;
+                         }
+                         else
+                         {
+                             nincsTarolt = !nincsTarolt;
+                             return tarolt;
+                         }
+                     }
+                     public static void main(String[] args)
+                     {
+                         PolarGen pg = new PolarGen();
+                         for (int i = 0; i < 10; i++)
+                         {
+                             out.println(pg.kovetkezo());
+                         }
+                     }
+                 }
+                ]]></programlisting>
+            </para>
+        <para>
+            Majd pedig a forráskódunk C++ nyelvben megírva:
+            <programlisting language="c++" ><![CDATA[
+                #include "polargen.h"
+
+                double PolarGen::kovetkezo ()
+                    {
+                        if (nincsTarolt)
+                            {
+                                double u1, u2, v1, v2, w;
+                                do
+                                    {
+                                        u1 = std::rand () / (RAND_MAX + 1.0);
+                                        u2 = std::rand () / (RAND_MAX + 1.0);
+                                        v1 = 2 * u1 - 1;
+                                        v2 = 2 * u2 - 1;
+                                        w = v1 * v1 + v2 * v2;
+                                    }
+                                while (w > 1);
+                                double r = std::sqrt ((-2 * std::log (w)) / w);
+                                tarolt = r * v2;
+                                nincsTarolt = !nincsTarolt;
+                                return r * v1;
+                            }
+                        else
+                            {
+                                nincsTarolt = !nincsTarolt;
+                                return tarolt;
+                            }
+                    }
+                ]]></programlisting>
+        </para>
+        <para>
+            Mint ahogyan a feladat leírásában is olvashatjuk egy polártanszformációs
+            generátort kellene megírnunk Java nyelven. A matematikai háttér számunkra
+            jelen esetben lényegtelen. Az algoritmusról/eljárásról annyit kell csupán
+            tudnunk, hogy két számot állít elő.
+        </para>
+        <para>
+           Miután ránéztünk a forráskódunkra észrevehetjük, hogy a "Polargen"
+           osztályunkban meghatározzuk a <function> boolean nincsTarolt</function>
+           értékét. Majd ez az érték lesz a <function>kovetkezo()</function>
+           függvény visszatérítési értéke. Most egy elágázás jön, hiszen ha tárolt
+           értékünk akkor nemes egyszerűséggel a <function>kovetkezo()</function>
+           függvény azt használja fel visszatérítési értéknek. Viszont abban az esetben
+           ha nincs tárolt értékünk, akkor két darabot állítunk elő, mégpedig azért
+           mert az egyiket egy változóban fogjuk eltárolni, a másikat pedig meghagyjuk
+           a visszatérítési értéknek.
+        </para>
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/polargen.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            Homokozó
+        </title>
+        <para>
+            Írjuk át az első védési programot (LZW binfa) C++ nyelvről Java
+            nyelvre, ugyanúgy működjön! Mutassunk rá, hogy gyakorlatilag a
+            pointereket és referenciákat kell kiirtani és minden máris működik
+            (erre utal a feladat neve, hogy Java-ban minden referencia, nincs
+            választás, hogy mondjuk egy attribútum pointer, referencia vagy
+            tagként tartalmazott legyen). Miután már áttettük Java nyelvre,
+            tegyük be egy Java Servletbe és a böngészőből GET-es kéréssel
+            (például a böngésző címsorából) kapja meg azt a mintát, amelynek
+            kiszámolja az LZW binfáját!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            "Gagyi"
+        </title>
+        <para>
+            Az ismert formális <programlisting>
+                <![CDATA[„while (x <= t && x >= t && t != x);”]]></programlisting>
+            tesztkérdéstípusra adj a szokásosnál (miszerint x, t az egyik esetben
+            az objektum által hordozott érték, a másikban meg az objektum referenciája)
+            „mélyebb” választ, írj Java példaprogramot mely egyszer végtelen
+            ciklus, más x, t értékekkel meg nem! A példát építsd a JDK Integer.java
+            forrására, hogy a 128-nál inkluzív objektum példányokat poolozza!
+        </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Arroway/Gagyi">Gagyi</link>
+        </para>
+        <para>
+            Javában amikor egy "int"-et hozzárendelünk egy "Integer objektumhoz"
+            az először átkonvertálódik egy integer objektummá majd azután
+            történik meg a hozzárendelés. Másnéven ezt hívjuk "autoboxolás"-nak.
+            Az alap értékek -128 és 127 között mozoghatnak.
+        </para>
+        <para>
+            <programlisting language="Java"><![CDATA[
+                class Gagyi1
+                {
+                public static void main (String[]args)
+                    {
+                    Integer x = -130;
+                    Integer t = -130;
+                    
+                    while (x <= t && x >= t && t != x);
+
+                    System.out.println (x);
+                    System.out.println (t);
+                    }
+                }
+            ]]></programlisting>
+        </para>
+        <para>
+            Ahogy látjuk az itt lévő két érték nem tartozik bele a -128 és 127-es
+            rangebe, ezért nem is csak egy objektet hoz létre, hanem kettőt.
+            Más memóriacímen vannak tárolva és ezáltal egy végtelen ciklus veszi
+            kezdetét.
+        </para>
+        <para>
+            <programlisting language="Java"><![CDATA[
+                class Gagyi2
+                {
+                public static void main (String[]args)
+                    {
+                    Integer x = -100;
+                    Integer t = -100;
+                    
+                    while (x <= t && x >= t && t != x);
+                    
+                    System.out.println (x);
+                    System.out.println (t);
+                    }
+                }
+            ]]></programlisting>
+        </para>
+        <para>
+            Amint láthatjuk feljebb, itt az autoboxolás során egy objektum van
+            létrehozva, nincs feleslegesen több létrehozva, így a végtelen ciklus
+            sem indul el, mivel a range az -128 és 127, a fenti számok pedig még
+            bele tartoznak.
+        </para>
+        <para>
+            <programlisting language="Java"><![CDATA[
+               public static Integer valueOf(int i)
+                    {
+               if (i >= IntegerCache.low && i <= IntegerCache.high)
+                    return IntegerCache.cache[i + (-IntegerCache.low)];
+                    return new Integer(i);
+               }
+            ]]></programlisting>
+        </para>
+        <para>
+            Ha magunk is megszeretnénk bizonyosodni a fentebb említettekről,
+            akkor nézzünk bele a JDK Integer forrásba (A JDK telepítési könyvtárában
+            az src.zip-ben) és láthatjuk, hogyha az értékeink nem az
+            "IntegerCache.low" és "IntegerCache.high" között mozognak akkor
+            lefut a <function>return new Integer(i)</function> sor miközben
+            létrejön a két integer.
+        </para>
+        <para>
+            Ha pedig meg szeretnénk kerülni az egész ranges, objektumozást akkor
+            csak elég a feljebb említett konstruktort használnunk ilyen módon:
+            <function>Integer x= new Integer(-100);</function>. Minden más maradhat
+            akár ugyan az is.
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            Yoda
+        </title>
+        <para>
+            Írjunk olyan Java programot, ami java.lang.NullPointerEx-el leáll,
+            ha nem követjük a Yoda conditions-t!
+            https://en.wikipedia.org/wiki/Yoda_conditions
+            </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Arroway/Yoda">Yoda</link>
+        </para>
+        <para>
+            Merem feltételezni, hogy a "Star Wars" filmeket mindannyian láttuk,
+            és beleégett az emlékezetünkbe Yoda-mester, igen, az a kis zöld
+            "manó" aki furán szavakat felcserélve beszél...
+        </para>
+        <para>
+        <programlisting language="Java" ><![CDATA[
+           class error
+           {
+           public static void main(String args[])
+               {
+               Integer Yoda = null;
+               int hey = Yoda.intValue();
+                   System.out.println(hey);
+               }
+           }
+        ]]></programlisting>
+        </para>
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/yoda.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        
+        <para>
+            Ebben a programkódban pont ezt próbáljuk ki mi is, a lényege pontosan
+            a felcserélés. Tehát egy összehasonlításban az a jobb oldali tagot
+            felcseréljük a bal oldali taggal. Ez a fajta programozói zsargon abból
+            a szempontból szerencsés, hogy így definiálásnál nem lesz elől egy
+            változó sem(akár null) ami pont az hibához vezetne. Viszont nehézségeket
+            okozhat az ilyen kódok olvasása, mivel a balról-jobbra olvasás, nem a
+            szokásos módon fog történni.
+        </para>
+    </section>
+        
+    <section>
+        <title>
+            Kódolás from scratch
+        </title>
+        <para>
+            Induljunk ki ebből a tudományos közleményből:
+            http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/bbp- alg.pdf és
+            csak ezt tanulmányozva írjuk meg Java nyelven a BBP algoritmus
+            megvalósítását! Ha megakadsz, de csak végső esetben:
+            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok- javat/apbs02.html#pi_jegyei
+            (mert ha csak lemásolod, akkor pont az a fejlesztői élmény marad
+            ki, melyet szeretném, ha átélnél).
+            </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Arroway/PiBBP">PiBBP</link>
+        </para>
+        <para>
+            A <link xlink:href="https://en.wikipedia.org/wiki/Bailey%E2%80%93Borwein%E2%80%93Plouffe_formula">
+            Bailey-Borwein-Plouffe</link> formula létrejötte
+            <link xlink:href="https://en.wikipedia.org/wiki/Simon_Plouffe">
+            Simon Plouffe</link> köszönhető, létrehozása 1995-ben
+            történt meg. Ez a formula a Pí érték kiszámítására szolgál,
+            ámbár nem a megszokott módon, hiszen a formulának hála, a
+            Pí számjegyeit tetszőleges ponttól is kiszámíthatjuk.
+            Pontosabban értve, nem szükséges, hogy tudjuk a megelőző
+            számjegyeket.
+        </para>
+        <para>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/piform.png" width="100%"/>
+                </imageobject>
+            </mediaobject>
+        </para>
+        <para>
+        <programlisting language="Java" ><![CDATA[
+        /*
+         * PiBBP.java
+         *
+         * DIGIT 2005, Javat tanítok
+         * Bátfai Norbert, nbatfai@inf.unideb.hu
+         *
+         */
+        /**
+         * A BBP (Bailey-Borwein-Plouffe) algoritmust a Pi hexa
+         * jegyeinek számolását végző osztály. A könnyebb olvahatóság
+         * kedvéért a változó és metódus neveket megpróbáltuk az algoritmust
+         * bemutató [BBP ALGORITMUS] David H. Bailey: The BBP Algorithm for Pi.
+         * cikk jelöléseihez.
+         *
+         * @author Bátfai Norbert, nbatfai@inf.unideb.hu
+         * @version 0.0.1
+         */
+        public class PiBBP {
+            String d16PiHexaJegyek;
+            
+            public PiBBP(int d) {
+                
+                double d16Pi = 0.0d;
+                
+                double d16S1t = d16Sj(d, 1);
+                double d16S4t = d16Sj(d, 4);
+                double d16S5t = d16Sj(d, 5);
+                double d16S6t = d16Sj(d, 6);
+                
+                d16Pi = 4.0d*d16S1t - 2.0d*d16S4t - d16S5t - d16S6t;
+                
+                d16Pi = d16Pi - StrictMath.floor(d16Pi);
+                
+                StringBuffer sb = new StringBuffer();
+                
+                Character hexaJegyek[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+                
+                while(d16Pi != 0.0d) {
+                    
+                    int jegy = (int)StrictMath.floor(16.0d*d16Pi);
+                    
+                    if(jegy<10)
+                        sb.append(jegy);
+                    else
+                        sb.append(hexaJegyek[jegy-10]);
+                    
+                    d16Pi = (16.0d*d16Pi) - StrictMath.floor(16.0d*d16Pi);
+                }
+                
+                d16PiHexaJegyek = sb.toString();
+            }
+            public double d16Sj(int d, int j) {
+                
+                double d16Sj = 0.0d;
+                
+                for(int k=0; k<=d; ++k)
+                    d16Sj += (double)n16modk(d-k, 8*k + j) / (double)(8*k + j);
+                return d16Sj - StrictMath.floor(d16Sj);
+            }
+            public long n16modk(int n, int k) {
+                
+                int t = 1;
+                while(t <= n)
+                    t *= 2;
+                
+                long r = 1;
+                
+                while(true) {
+                    
+                    if(n >= t) {
+                        r = (16*r) % k;
+                        n = n - t;
+                    }
+                    
+                    t = t/2;
+                    
+                    if(t < 1)
+                        break;
+                    
+                    r = (r*r) % k;
+                    
+                }
+                
+                return r;
+            }
+            public String toString() {
+                
+                return d16PiHexaJegyek;
+            }
+            public static void main(String args[]) {
+                System.out.print(new PiBBP(1000000));
+            }
+        }
+        ]]></programlisting>
+        </para>
+        <para>
+            Először is létre kell hoznunk a formulánknak egy osztályt,
+            miután létrehoztuk az osztályt, argumentumként bekérünk egy
+            "d" számot, ami a d+ helyi értéke lesz. Kezdőértéket adunk
+            meg a "d16Pi"-nek majd kiszámíttatjuk az S1,S4,S5,S6 értékeket.
+        </para>
+        <para>
+            A formulával kiszámítjuk a "d16Pi" értékét, ezt követve pedig
+            létrehozunk egy tömböt, és tároljuk benne a hexadecimális
+            betűket, mivel ezekre is szükségünk lesz. Majd írunk egy egyszerű
+            "while" ciklust ami egészen addig fut folyamatosan amíg a
+            "d16Pi" nem lesz egyenlő 0-val.
+        </para>
+        <para>
+            A megkapott számoknál 2 eset
+            ha...Ha a kapott szám kissebb mint 10 akkor belehelyezzük
+            egy hamarabb létrehozott "Stringbuffer sb"-be, ha pedig nagyobb
+            mint 10 (ezért kellenek a hexadecimális számok), akkor kivonunk
+            belőle 10-et és így már hozzá tudunk rendelni egy betűt,
+            ezt majd átalakítjuk és a "d16PiHexaJegyek"-ben tároljuk.
+        </para>
+    </section>
+                    
+</chapter>

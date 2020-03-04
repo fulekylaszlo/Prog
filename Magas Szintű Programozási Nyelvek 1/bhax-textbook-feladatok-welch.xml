@@ -1,0 +1,166 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Welch!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Első osztályom</title>
+        <para>
+            Valósítsd meg C++-ban és Java-ban az módosított polártranszformációs algoritmust! A matek háttér 
+            teljesen irreleváns, csak annyiban érdekes, hogy az algoritmus egy számítása során két normálist
+            számol ki, az egyiket elspájzolod és egy további logikai taggal az osztályban jelzed, hogy van vagy
+            nincs eltéve kiszámolt szám.
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Welch/Els%C5%91%20oszt%C3%A1ly.cpp">Első osztály
+            </link>
+        </para>
+        <para>
+         A forráskódunkban először készítünk egy osztályt, mely a random számok generálására fog szolgálni. Ennek lesz egy private és egy public része is.
+        </para>
+        <para>
+            Lesz egy konstruktorunk, ami valójában a <function>polargen()</function>, viszont ezt csak egyszer fogjuk visszahívni. A másik ilyen függvényünk a destruktor lesz amit akkor hívunk meg amikor a tárterületen akarunk egy picit felszabadítani.
+        </para>
+        <para>
+            A mainben fogjuk deklarálni a "polargen rnd" váltózót és generálunk 10 random számot a <function>for</function> ciklus segítségével.
+        </para>
+        <para>
+            Javában annyi lesz a változás, hogy rövidebb, egyszerűbb a forráskódunk, és valójában egy nagy osztály az egész. Itt is lesz egy konstruktorunk, és a függvények ugyan azt hajtják végre mint a "c++"-os változatban, viszont, itt sokkal egyszerűbben is meg tudjuk írni a 10 random szám generálását.
+        </para>
+    </section>        
+
+    <section>
+        <title>LZW</title>
+        <para>
+            Valósítsd meg C-ben az LZW algoritmus fa-építését!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Welch/LZW%20binfa.cpp">LZW Binfa
+            </link>
+        </para>
+        <para>Az LZW algoritmus-t különböző GNU eszközök használják, mint például a "compress" vagy a "gunzip", mivel az LZW algoritmus az egy tömörítő algoritmus.</para>
+            <para>A működésének a lényege az az, hogy a bemeneti nullákból és egyesekből épít fel egy bináris fát, majd ezt követően ellenőrzéseken megy végig és megvizsgálja, hogy a szülőnek van-e nullás/egyes gyermeke, ha nincs akkor létrehoz egye és ezután pedig visszatér a gyökérhez. Abban az esetben amikor talál a szülőnek egy nullás/egyes gyermeket akkor "rálép" és egészen addig követi ezt a ciklust amíg nem talál egy olyan részfát ahol nincs gyermek és újból vissztérhetne a gyökérhez.
+        </para>
+            <para>A futtatás a következőképpen fog történni:
+            </para>
+            <para>
+                <programlisting><![CDATA[
+                    ./binfa bemeneti_fájl -o kimeneti_fájl
+                ]]></programlisting>
+            </para>
+    </section>        
+        
+    <section>
+        <title>Fabejárás</title>
+        <para>
+            Járd be az előző (inorder bejárású) fát pre- és posztorder is!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Welch/LZW%20fabej%C3%A1r%C3%A1s.cpp">Fabejárás
+        </link>
+        </para>
+        <para>
+        A "preorder" és a "postorder" fabejárás között csak annyi a különbség, hogy míg a "preorder"-ben feldolgozzuk az elemet és bejárjuk preorder a bal oldali részfát majd preorder a jobb oldali részfát, a másodikban pedig a feldolgozzuk az elemet, bejárjuk postorder a jobb oldali részfát, majd ezután pedig postorder a bal oldali részfát. Ezek után már csak futtatnunk kell a programotkódunkat amit majd úgy tudunk megtenni, hogy <function>.binfa befile -o/r kifile</function> itt viszont fontos megjegyezni, hogy az <function>-o/r</function>
+        közül választanunk kell mégpedig aszerint, hogy mit szerenténk. Az o jelzi a "postorder"-t és az r pedig a "preorder"-t.
+        </para>
+    </section>        
+                        
+    <section>
+        <title>Tag a gyökér</title>
+        <para>
+            Az LZW algoritmust ültesd át egy C++ osztályba, legyen egy Tree és egy beágyazott Node
+            osztálya. A gyökér csomópont legyen kompozícióban a fával!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Welch/LZW%20Binfa(tag%20a%20gy%C3%B6k%C3%A9r).cpp">Tag a gyökér
+            </link>
+        </para>
+        <para> Az LZW Binfa forráskódja alapból úgy van, hogy a gyökér együttesen van a fával.
+        </para>
+    </section>        
+                
+    <section>
+        <title>Mutató a gyökér</title>
+        <para>
+            Írd át az előző forrást, hogy a gyökér csomópont ne kompozícióban, csak aggregációban legyen a 
+            fával!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Welch/LZW%20Binfa(mutat%C3%B3%20a%20gy%C3%B6k%C3%A9r).cpp">Mutató a gyökér
+            </link>
+        </para>
+        <para>Itt annyit kell tennünk, hogy módosítjuk a forráskódunkat, mégpedig úgy, hogy a bináris fa gyökere mutató legyen. Ezt úgy tudjuk megtenni, hogy a gyökér csomópontjának a definíciójánál, helyet foglalunk a gyökérnek, ezt követően pedig az így kapott mutatót egyszerűen behelyettesítjük azokra a helyekre, ahol a gyökér változóra hivatkoztunk előzőleg.
+        </para>
+    </section>                     
+
+    <section>
+        <title>Mozgató szemantika</title>
+        <para>
+            Írj az előző programhoz mozgató konstruktort és értékadást, a mozgató konstruktor legyen a mozgató értékadásra alapozva!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Welch/LZW%20Binfa(mozgat%C3%B3%20szemantika).cpp">Mozgató szemantika
+            </link>
+        </para>
+        <para>Mielőtt elkezdenénk bármit is tenni, meg kell jegyeznünk, hogy mit is értünk mozgató szemantika alatt. 3 különböző dolgot értünk alatta:
+         </para>
+        <para>
+            - Másoló konstruktor
+            </para>
+        <para>
+            - Mozgató konstruktor
+        </para>
+        <para>
+            - Destruktor
+        </para>
+        <para>Megjegyezném még, hogy gondolhatjuk, hogy elég lesz egy <function>std::move</function>, de sajnos ez nem igaz, ugyanis a bemenetekből jobbérték referenciát csinál sé utána meghívja annak a mozgató konstruktorát. Tehát konkrétan itt nem válik hasznunkra semmit.
+            </para>
+        <para> Alap esetben az LZW Binfában beágyazott "csomópont" osztályú objektumok vannak, amik alkotják a fát. Így a fát úgy tudjuk majd másolni, hogy ezeket a csomópontok majd rekurzívan másoljuk. A rekurzív másoló függvénynek át kell adnunk a gyökeret és a fát is. A mozgatókonstruktor elkészítése annyit takar, hogy az "=" operátort túlterheljük.
+        </para>
+        <programlisting><![CDATA[
+            Csomopont *masol(Csomopont * elem, Csomopont * regifa) {
+            Csomopont *ujelem = NULL;
+            if (elem != NULL) {
+            switch (elem->getBetu()) {
+            case '/':
+            ujelem = new Csomopont('/');
+            break;
+            case '0':
+            ujelem = new Csomopont('1');
+            break;
+            case '1':
+            ujelem = new Csomopont('0');
+            break;
+            default:
+            std::cerr << "HIBA!" << std::endl;
+            break;
+            }
+            ujelem->ujEgyesGyermek(masol
+            (elem->egyesGyermek(), regifa));
+            ujelem->ujNullasGyermek(masol
+            (elem->nullasGyermek(),
+            regifa));
+            if (regifa == elem)
+            fa = ujelem;
+            
+            }
+            
+            return ujelem;
+            }
+            
+            protected:
+            Csomopont * gyoker;
+            int maxMelyseg;
+            double atlag, szoras;
+            
+            void rmelyseg(Csomopont * elem);
+            void ratlag(Csomopont * elem);
+            void rszoras(Csomopont * elem);
+            };
+        ]]></programlisting>
+        <para>A fenti kódcsipetben láthatjuk, hogy ez egy másoló függvény, melyet a másoló konstruktorból tudtunk meghívni, és amint említettem korábban, át is adtuk neki a fát és a gyökeret is.
+            </para>
+    </section>                                                                              
+</chapter>                

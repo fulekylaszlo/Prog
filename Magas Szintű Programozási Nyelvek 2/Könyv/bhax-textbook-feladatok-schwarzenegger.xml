@@ -1,0 +1,88 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Schwarzenegger!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Szoftmax Py MNIST</title>
+        <para>
+            Python
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/j7f9SkJR3oc">https://youtu.be/j7f9SkJR3oc</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/tensorflow/tensorflow/releases/tag/v0.9.0">https://github.com/tensorflow/tensorflow/releases/tag/v0.9.0</link> (/tensorflow-0.9.0/tensorflow/examples/tutorials/mnist/), <link xlink:href="https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow-bol">https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow-bol</link>
+        </para>
+        <programlisting><![CDATA[
+            # TensorFlow Hello World 1!
+            # twicetwo.py
+            #
+            import tensorflow
+            
+            node1 = tensorflow.constant(2)
+            node2 = tensorflow.constant(2)
+            
+            node_twicetwo = tensorflow.mul(node1, node2, name="twicetwo")
+            
+            sess = tensorflow.Session()
+            print sess.run(node_twicetwo)
+            
+            writer = tensorflow.train.SummaryWriter("/tmp/twicetwo", sess.graph)
+            # nbatfai@robopsy:~/Robopsychology/repos/tensorflow/tensorflow/tensorboard$ python tensorboard.py --logdir=/tmp/twicetwo
+            
+            tensorflow.train.write_graph(sess.graph_def, "models/", "twicetwo.pb", as_text=False)
+            # nbatfai@robopsy:~/Robopsychology/repos/tensorflow/tensorflow/twicetwo$ bazel build :twicetwo
+            # nbatfai@robopsy:~/Robopsychology/repos/tensorflow/bazel-bin/tensorflow/twicetwo$ cp -r ~/Robopsychology/r
+        ]]>
+        </programlisting>
+        <para>
+            Alapismertetőnek, hogy tudjuk mivel is dolgozunk:  A TensorFlow egy nagyon ismert program melyet még a híres "Google" cég is használ. Nyílt forráskódú.
+        </para>
+        <para>
+            Az első program amit megírunk nem nehéz, mivel csak annyit fogunk csinálni, hogy összeszorzunk két számot egy neurális háló segítségével Python-ban. Fentebb láthatjuk is a forráskódunkat.
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="./pic/twicetwo.png"/>
+                </imageobject>
+         </mediaobject>
+                <para> Feljebb látható egy számítási gráf. A lényege, hogy van 2 darab konstans csomópont , ezek a twicetwo műveleti csomópontnak a bementeire vannak kötve, ami majd összeszorozza őket.
+                </para>
+    </section>
+    <section>
+        <title>Mély MNIST</title>
+        <para>
+            Python
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            PASSZ
+        </para>
+    </section>
+    <section>
+        <title>Minecraft-MALMÖ</title>
+        <para>
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/bAPSu3Rndi8">https://youtu.be/bAPSu3Rndi8</link>
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://bhaxor.blog.hu/9999/12/31/minecraft_steve_szemuvege">Minecraft tematikájú programozások</link>
+        </para>
+        <para>
+            Mielőtt elkezdenénk Minecraftban programozni, először is tisztázzuk mi is az a Minecraft. Ez egy nyílt világú játék, melyben barkácsolhatunk az összegyűjtött anyagáokból, építhetünk belőlük, harcolhatunk szörnyek ellen, felfedezhetünk, és tulajdonképpen kiélhetjük a gyerekkori LEGO vágyainkat egy számítógépes játékon belül.
+        </para>
+        <para>Ebben a feladatban egy mesterséges inteligenciát próbálunk meg megírni, mely folyamatosan előre fog menni a játékban. Ez nem is hangzik túl bonyolultnak, de a Minecraft világa ezt nagyon megnehezíti különböző dolgokkal, mint pl. hegyek, tavak, gödrök, szakadékok, láva és hasonló dolgok.
+        </para>
+        <para>
+            A lényeg az lenne, hogy a karakterünk (Steve) először is kikerülje az akadályok a koordinátákat figyelve. Ha viszont ezt nem sikerül és tegyük fel, beleesik egy gödörbe, akkor ne álljon meg helyben, hanem "nézzen körül" vizsgálja meg a koordinátákat és a legoptimálisabb módszerrel kijusson onnan.
+        </para>
+    </section>
+    
+</chapter>
+

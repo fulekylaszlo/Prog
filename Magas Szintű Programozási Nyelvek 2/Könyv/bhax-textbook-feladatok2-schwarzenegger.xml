@@ -1,0 +1,261 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Schwarzenegger!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>
+            10. hét Kivételkezelés. és 12. hét Reflexió. A fordítást és a kódgenerálást támogató nyelvi elemek (annotációk, attribútumok).
+        </title>
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Kivételkezelés:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            A kivételkezelés, az egy programozási mechanizmus, aminek az a célja,
+            hogy egy programot, futás közben szándékosan vagy nem szándékolt módon megszakító
+            hibát kezelje. 
+        </para>
+        <para>
+            Bővebben itt lehet utánaolvasni:<link xlink:href="https://hu.wikipedia.org/wiki/Kiv%C3%A9telkezel%C3%A9s">Kivételkezelés</link>
+        </para>
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Annotációk:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            Javában az annotáció az olyan nyelvi elem, amely segíti a metaadtok
+            beépítését a forráskódba.
+        </para>
+        <para>
+            Bővebben itt lehet utánaolvasni:<link xlink:href="https://hu.wikipedia.org/wiki/Java_annot%C3%A1ci%C3%B3k">Annotációk</link>
+        </para>
+    </section>
+    
+    <section>
+        <title>Port scan</title>
+        <para>
+            Mutassunk rá ebben a port szkennelő forrásban a kivételkezelés szerepére!
+            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/ch01.html#id527287
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/ch01.html#id527287">Példaprogram</link>
+            <programlisting language="java">
+            <![CDATA[ public class PortScan {
+                public static void main(String[] args) {
+                    for(int i=0; i<1024; ++i)
+                        try {
+                            java.net.Socket socket = new java.net.Socket(args[0], i);
+                            System.out.println(i + " figyeli");
+                            socket.close();
+                        } catch (Exception e) {
+                            System.out.println(i + " nem figyeli");
+                        }
+                }
+            }]]></programlisting>
+        </para>
+        <para>
+           A portszkennelés főleg a hálózatok biztonságának leellenőrzésében
+           játszik nagy szerepet. Amikor arról beszélünk, hogy egy host-ot
+           portszkennelünk akkor arról beszélünk valójában, hogy azon az adott
+           hoston átvizsgáljuk a hallgató portokat(amelyek feleslegesen vannak megnyitva).
+        </para>
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/portscan.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            Amint futtatjuk a programunkat láthatjuk, hogy 1-től 1024-ig
+            végigpróbáljuk az összes portot és megpróbálunk nyitni egy socket-et.
+            Ha ez sikerül akkor elérhető, ha nem akkor nem elérhető a port.
+        </para>
+    </section>
+    
+    <section>
+        <title>AOP</title>
+        <caution>
+                   <title>
+                       Tutoriált
+                   </title>
+                   <para>
+                       Ebben a feladatban tutoriált Dékány Róbert.
+                   </para>
+               </caution>
+        <para>Szőj bele egy átszövő vonatkozást az első védési programod Java átiratába! (Sztenderd védési feladat volt korábban.)
+        </para>
+        <para>
+            A szokásos probléma merül fel itt is, úgyhogy Java 8-at használunk
+            jelenleg itt is. Ahhoz, hogy használni tudjuk az AspectJ-t pár package-t
+            is fel kell raknunk, fordításnál pedig az "ajc" fordítót fogjuk használni.
+            Szükség lesz a Binfa.java-ra és az aspektj file-ra.
+        </para>
+        <para>
+            <programlisting><![CDATA[
+                privileged aspect BinfaAspect
+                {
+                void around(Binfa fa, Binfa.Csomopont elem, BufferedWriter os):
+                call(public void Binfa.kiir(Binfa.Csomopont, BufferedWriter))&& target( ←􏰀
+                       fa) && args(elem, os)
+                       {
+                if (elem != null) {
+                try
+                {
+                ++fa.melyseg;
+                for (int i = 0; i < fa.melyseg; ++i)
+                os.write("---");
+                os.write(elem.getBetu () + "(" + (fa.melyseg - 1) + ")\n");
+                fa.kiir(elem.egyesGyermek (), os);
+                fa.kiir(elem.nullasGyermek (), os);
+                --fa.melyseg; }
+                catch(Exception e)
+                {
+                } }
+                }
+                System.out.err(e.getMessage()); }
+            ]]></programlisting>
+        </para>
+        <para>
+            Fordítás:
+        </para>
+            <para>
+                <programlisting><![CDATA[
+                ajc Binfa.java BinfaAspect.aj
+                ]]></programlisting>
+            </para>
+        <para>
+            Futtatás:
+        </para>
+        <para>
+            <programlisting><![CDATA[
+            java -classpath ./aspectjrt.jar:. Binfa.ja input.txt -o output.txt
+            ]]></programlisting>
+        </para>
+    </section>
+    
+    <section>
+        <title>Android Játék</title>
+        <para>
+            Írjunk egy egyszerű Androidos „játékot”! Építkezzünk például a 2. hét „Helló, Android!” feladatára!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Schwarzenegger/tictactoe">Tic Tac Toe</link>
+        </para>
+        <para>
+            <link xlink:href="https://www.youtube.com/watch?v=AIPiMs_jtco">Tutorial 1/2</link>
+            <link xlink:href="https://www.youtube.com/watch?v=rD3uqeLdal8">Tutorial 2/2</link>
+        </para>
+        <para>
+        <mediaobject>
+                <imageobject>
+                    <imagedata fileref= "pic/iphone.png" width="100%"/>
+                </imageobject>
+        </mediaobject>
+        </para>
+        <para>
+            A játékot teljes mértékben a két tutoriál segítségével vittem véghez,
+            mindent úgy csinálam ahogyan el volt magyarázva, viszont csak 1x sikerült
+            lefuttatnom simulátorban (Xcode simulator) a játékot, utána már valamiért
+            nem a játék nem futott, hanem a simulátorban bootoló IOS, ahogyan a fenti
+            képen is látható, próbáltam kiküszöbölni, de nem találtam helytálló megoldást.
+        </para>
+    </section>
+    
+    <section>
+        <title>Junit teszt</title>
+        <caution>
+            <title>Tutoriált</title>
+            <para>
+                Ebben a feladatban tutoriált Duszka Ákos Attila.
+            </para>
+        </caution>
+        <para>
+             A https://progpater.blog.hu/2011/03/05/labormeres_otthon_avagy_hogyan_dolgozok_fel_egy_pedat poszt kézzel számított mélységét és szórását dolgozd be egy Junit tesztbe (sztenderd védési feladat volt korábban).
+        </para>
+        <para>
+            A JUnit az egy olyanfajta tesztelés melynek annyi a lényege, hogy van
+            egy programunk, amit bizonyos feltételek mellett tesztelni szeretnénk
+            így beállítunk hibahatárokat, és azon belül tudjuk keresni a hibáinkat.
+        </para>
+        <para>
+            A <function>assertEquals()</function> függvénnyel fogjuk
+            összehasonlítani az eltérést a várható értékek és a kapott értékek között.
+        </para>
+        <para>
+            <programlisting><![CDATA[
+            org.junit.Assert.assertEquals()
+            ]]></programlisting>
+        </para>
+        <para>
+            A már megszokott binfánkat fogjuk tesztelni(mélység, átlag, szórás).
+        </para>
+        <para>
+            <programlisting><![CDATA[
+            org.junit.Assert.assertEquals(4, binfa.getMelyseg(), 0.0);
+            org.junit.Assert.assertEquals(2.75, binfa.getAtlag(), 0.001);
+            org.junit.Assert.assertEquals(0,957427 binfa.getSzoras(), 0.0001);
+            ]]></programlisting>
+        </para>
+        <para>
+            A Test:
+        </para>
+        <para>
+            <programlisting><![CDATA[
+            public class LZWBinFaTest {
+            LZWBinFa binfa = new LZWBinFa(); String str = "0111011";
+            @Test
+            public void atlagTest() {
+            for(int i = 0; i < str.length(); i++){
+            binfa.push_back(str.charAt(i));
+            }
+            double atlag = binfa.getAtlag(); assertEquals(2.25, atlag, 0.001);
+            }
+            @Test
+            public void szorasTest() {
+            for(int i = 0; i < str.length(); i++){
+            binfa.push_back(str.charAt(i)); }
+            double szoras = binfa.getSzoras();
+            assertEquals(0.5, szoras, 0.001); }
+            @Test
+            public void melysegTest() {
+            for(int i = 0; i < str.length(); i++){ binfa.push_back(str.charAt(i));
+            } }
+            }
+            double melyseg = binfa.getMelyseg(); assertEquals(3, melyseg, 0.001);
+            ]]></programlisting>
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            OSCI</title>
+        <para>
+            Készíts egyszerű C++/OpenGL-es megjelenítőt, amiben egy kocsit irányítasz az úton. A kocsi állapotát minden pillanatban mentsd le. Ezeket add át egy Prolog programnak, ami egyszerű reflex ágensként adjon vezérlést a kocsinak, hasonlítsd össze a kézi és a Prolog-os vezérlést. Módosítsd úgy a programodat, hogy ne csak kézzel lehessen vezérelni a kocsit, hanem a Prolog reflex ágens vezérelje!
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+</chapter>
+
+
+
+
+
+
+

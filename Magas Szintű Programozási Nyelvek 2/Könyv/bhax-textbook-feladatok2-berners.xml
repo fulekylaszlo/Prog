@@ -1,0 +1,114 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+    <info>
+        <title>
+            Helló, Berners-Lee!
+        </title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>A szokásos olvasónapló feladat:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            - C++: Benedek Zoltán, Levendovszky Tihamér Szoftverfejlesztés
+            C++ nyelven
+        </para>
+        <para>
+            - Java: Nyékyné Dr. Gaizler Judit et al. Java 2 útikalauz programozóknak
+            5.0 I-II. Ebből a két könyvből pár oldalas esszé jellegű kidolgozást
+            kérek, Java és C++ összehasonlítás mentén, pl. kb.: kifejezés fogalom
+            ua., Javában minden objektum referencia, mindig dinamikus a kötés,
+            minden függvény virtuális, klónozás stb.
+        </para>
+        <para>
+            - Python: Forstner Bertalan, Ekler Péter, Kelényi Imre: Bevezetés a
+            mobilprogramozásba. Gyorsprototípus-fejlesztés Python és Java nyelven
+            (35-51 oldal). Itt a kijelölt oldalakból egy 1 oldalas élmény-
+            olvasónaplóra gondoltam.
+        </para>
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>- Java és C++ :
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            A két programozási nyelv között, természetesen vannak kissebb nagyobb
+            átfedések, de ami izgalmasabb azok az eltérések, melyeket észrevehetünk.
+            Egyik legnagyobb eltérés az az, hogy a Java az egy objektumorientált
+            programozási nyelv, míg a C++ objektum- és eljárásobjektált egyszerre.
+            Nagy különbség szintén, hogy míg C++-ban mutatók segítségével tudunk
+            közvetlenül bánni a memóriával, addig ez Java-ban nem lehetséges,
+            (szimbolikusan, hivatkozásokon keresztül viszont megoldható). A két
+            nyelvben a kommentelési lehetőség is eltérő, míg C++-ban blokk-
+            kommentet és sorkommentet használunk, addig Javában "dokumentációs
+            kommentet", melyből egy segédprogram segítségével akár HTML- formátumú
+            dokumentációt is létre lehet hozni. A fordítás a C++-ban megszokott
+            fejállományok beemelésének támogatásával, makrókkal ellentetétben a
+            Javában a szimbólumként használandó azonosítókat egy osztályban vagy
+            interfészben adattagként definiálhatjuk. Míg Javában nincs szükségünk
+            "headerek" (#include...) használatára, addig C++-ban ez elengedhetetlen.
+            Függvény argumentumainak C++-ban megadhatunk egy alapértelmezett
+            értéket, lásd.
+            <programlisting>
+                <![CDATA[class x
+                    {
+                    void doit(int x=0, int y=0);
+                    }; ]]>
+            </programlisting>
+            Viszont ezt a lehetőség Java-ban nem áll fenn, ott ezt így oldhatjuk
+            meg:
+            <programlisting>
+                <![CDATA[class x
+                    {
+                    void doit()
+                        {
+                        doit(0,0);
+                        }
+                    void doit(int x)
+                        {
+                        doit(x,0);
+                        }
+                    void doit(int x, int y)
+                        {
+                        // ...
+                        }
+                    } ]]>
+            </programlisting>
+        </para>
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>- Python :
+                </emphasis>
+            </emphasis>
+        </simpara>
+        <para>
+            A Python "szkriptnyelvet" <link xlink:href=
+            "https://en.wikipedia.org/wiki/Guido_van_Rossum">
+            Guido van Rossum</link> hozta létre 1990-ben. A
+            Python az egy objektumorientált, platformfüggetlen (Windows, MacOSX,
+            S60, UIQ, UNIX) nyelv. Legfőbképpen és valójában legjobban a
+            fejlesztésen belül, prototípusok készítésre és tesztelésére alkalmas.
+            Bár a sok csatolható könyvtárral és modullal, egyszerűbb alkalmazások
+            készítésre is kiváló nyelv. Prototípus alkalmazások létrehozása pl.
+            (felhasználói interfész, algoritmus, alkalmazási lehetőség), sokkal
+            egyszerűbb mint mondjuk egy C,C++ vagy éppen egy Java nyelven. Nagy
+            előnye továbbá, hogy nincs szükség fordításra illetve linkelésre.
+            Szintaxisa behúzásalapú.
+        </para>
+        <para>
+            Adattípusai a következők lehetnek: számok, sztringek, ennensek, listák,
+            szótárak. A mobilkészülékre való fejlesztést lényegesen megkönnyíti
+            a különböző modulok pl. (appinfw, messaging, sysinfo, camera, audio)
+            használata. A kivételkezelés hasonlóan működik, mint ahogyan egy C++
+            nyelven is.
+        </para>
+</chapter>
+

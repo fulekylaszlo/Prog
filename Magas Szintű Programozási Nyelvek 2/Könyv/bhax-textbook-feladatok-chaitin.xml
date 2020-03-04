@@ -1,0 +1,61 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Chaitin!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Iteratív és rekurzív faktoriális Lisp-ben</title>
+        <para>
+           Megoldás videó: <link xlink:href="https://youtu.be/z6NJE2a1zIA">https://youtu.be/z6NJE2a1zIA</link>
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/DEIK/blob/master/Prog1/Forr%C3%A1sok/Chaitin/Faktori%C3%A1lis.lisp">Faktoriális</link>
+        </para>
+        <para>
+            Ahhoz, hogy el tudjunk kezdeni Lispben programozni, az én esetemben(MACOSX), de Linux disztribúciók alatt is szükségünk van arra, hogy telepítsünk egy Lisp-et futtató programot, ami ebben a két esetben a <function>clisp</function>.
+        </para>
+        <para>
+            Első fontos dolog, amit muszáj megjegyeznünk a Lispben való programozás elkezdése előtt, hogy nem a megszokott módon végezzük el az adott számítási műveleteket, így az általunk ismert (1+1)-ből (+ 1 1) lesz.
+        </para>
+        <para>Továbbá amit fontos megjegyeznünk, hogy a programokat <function>clisp fájlnevünk.lisp</function> módon fogjuk futtatni, valamint a fent leírt szabály alapján fontos, hogy szóközzökkel választjuk el a "paramétereket".
+        </para>
+    </section>
+    <section>
+        <title>Gimp Scheme Script-fu: króm effekt</title>
+        <para>
+            Írj olyan script-fu kiterjesztést a GIMP programhoz, amely megvalósítja a króm effektet egy 
+            bemenő szövegre!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/OKdAkI_c7Sc">https://youtu.be/OKdAkI_c7Sc</link>      
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Chrome">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Chrome</link>               
+        </para>
+        <para>
+             Ahhoz, hogy használni tudjuk a króm effektet azt kell tennünk, hogy letöltjük a "bhax_chrome3_border2.scm" nevű fájlt, amit be kell helyeznünk a GIMP "scripts" nevű mappájába, amit alapértelmezett esetben itt tudunk elérni: <function>~/.config/GIMP/2.10/scripts</function>
+        </para>
+        <para>Ezután már személyre is tudjuk szabni az effektünket valamint használni is tudjuk már.
+        </para>
+    </section>        
+
+    <section>
+        <title>Gimp Scheme Script-fu: név mandala</title>
+        <para>
+            Írj olyan script-fu kiterjesztést a GIMP programhoz, amely név-mandalát készít a
+            bemenő szövegből!               
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv">https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv</link>      
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Mandala">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Mandala</link>               
+        </para>
+        <para>
+            A következő feladatban is GIMP-et fogunk használni, ráadásul, kipróbáljuk azt, hogy hogyan is hozhatunk létre egy mandalát a programban.</para>
+            <para>A forráskódot bemásolhatjuk akár a Gimps Script-fu konzoljába, és akkor kapunk egy mandalát, de ha személyre szeretnénk szabni, akkor a fájlt a <function>~/.config/GIMP/2.10/scripts</function> helyre kell bemásolnunk, és akkor már a programon belül tudjuk személyre szabni(szín, szöveg, felület, font, stb...).
+        </para>            
+    </section>
+</chapter>                

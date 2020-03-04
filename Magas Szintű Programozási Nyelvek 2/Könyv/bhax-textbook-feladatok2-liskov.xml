@@ -1,0 +1,743 @@
+<chapter xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         version="5.0" xml:lang="hu">
+         
+    <info>
+        <title>Helló, Liskov!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>
+           Öröklődés, osztályhierarchia. Polimorfizmus, metódustúlterhelés.
+            Hatáskörkezelés. A bezárási eszközrendszer, láthatósági szintek.
+            Absztrakt osztályok és interfészek.
+        </title>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Öröklődés és osztályhierarchia:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Az öröklődés azt takarja, hogy egy objektumból levezetett másik/újabb
+            objektum örökli az adatstruktúrákat és fügvényeket, és akár új
+            tulajdonságokat is definiálhat. Az osztályhierarchia alatt pedig a
+            különböző osztályok közötti viszonyok által kialakult szerkezetet értjük.
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Polimorfizmus és metódustúlterhelés:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+           A polimorfizmus, másnéven "többalakúság" pedig azt jelenti, hogy egy
+           metódus azonosítója egy objektum szerkezeten belül lehet közös, viszont
+           az adott objektumra való tekintettel specifikus/egyedi is lehet.
+           A metódustúlterhelésnél pedig azonos nevű metódusok létrehozásáról,
+           de különböző paraméterlistákról beszélünk. A túlterhelés/overloading
+           valójában annyit takar, hogy az aktuális pareméterlistának megfelelő
+           metódus lesz meghívva.
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Hatáskörkezelés:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            A hatáskörkezelés az egy folyamat mely során bármely névnek megadjuk
+            a hatáskörét
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Bezárási eszközrendszer és láthatósági szintek:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Java nyelven belül úgynevezett láthatósági módosítókkal allíthatjuk be
+            a bezárási szinteket. A külöböző fajták: public,protected,private .
+        </para>
+        
+        <simpara>
+            <emphasis role="strong">
+                <emphasis>
+                    Absztrakt osztályok és interfészek:
+                </emphasis>
+            </emphasis>
+        </simpara>
+        
+        <para>
+            Az absztrakt osztályok egy vagy több absztrakt metódust tartalmazó
+            osztály. Az interfész feladata, pedig, hogy olyan metódusokat tartalmazzon
+            melyeket bármelyik osztály(ami paraméterként várja az objektumot), meghívhat.
+        </para>
+    </section>
+
+    <section>
+        <title>
+            Liskov helyettesítés sértése
+        </title>
+        <caution>
+            <title>Tutoriált</title>
+            <para>
+                Ebben a feladatban tutoriált Tóth Attila.
+            </para>
+        </caution>
+        <para>
+            Írjunk olyan OO, leforduló Java és C++ kódcsipetet, amely megsérti
+            a Liskov elvet! Mutassunk rá a megoldásra: jobb OO tervezés.
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_1.pdf
+            (93-99 fólia), számos példa szerepel az elv megsértésére az
+            UDPROG repóban, lásd pl. source/binom/Batfai- Barki/madarak/
+        </para>
+        <para>
+            Megoldás forrása:
+            <link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Liskov/Liskov">Liskov-elv</link>
+        </para>
+        <para>
+            Legelőször tisztázzuk azt, hogy mi is az a Liskov-elv: Ha S altípusa
+            T-nek, akkor minden helyen ahol T-t felhasználjuk és S-t is probléma
+            nélkül behelyettesítjük, úgy, hogy a programrész maga ne változzon.
+            Tehát nem ilyen kötött formában minden helyre ahol T szerepel gond
+            nélkül be tudunk helyettesíteni S-t.
+        </para>
+        <para>
+            Ahogyan a forráskódokban is láthatjuk, C++ verzióban lefurdul mindkét
+            forráskód, viszont az egyikben, logikai hibába ütközünk, mégpedig,
+            hogy a pingvin, ahogy definiáltuk, madár...viszont repülni azt már
+            nem tud, így ez nem felel meg a valóságnak.
+        </para>
+        <para>
+            <programlisting language="c++" ><![CDATA[
+                class Madar
+                    {
+                    };
+
+                class Program
+                    {
+                    public:
+                    void fgv ( Madar &madar )
+                        {
+                        }
+                    };
+
+                class RepuloMadar : public Madar
+                    {
+                    public:
+                    virtual void repul() {};
+                    };
+
+                class Sas : public RepuloMadar
+                {};
+
+                class Pingvin : public Madar
+                {};
+
+                int main ( int argc, char **argv )
+                    {
+                    Program program;
+                    Madar madar;
+                    program.fgv ( madar );
+
+                    Sas sas;
+                    program.fgv ( sas );
+
+                    Pingvin pingvin;
+                    program.fgv ( pingvin );
+                    }
+            ]]></programlisting>
+        </para>
+        <para>
+            Ugyan ezt valósítjuk meg javában is, és itt már kapunk is egy hibaüzenetet
+            amit lejjebb láthatunk.
+        </para>
+        <para>
+                           <programlisting language="Java" ><![CDATA[
+                                  class Madar
+                                      {
+                                       void repul()
+                                          {
+                                          System.out.println("Reptetés");
+                                          }
+                                      }
+
+                                  class Sas extends Madar
+                                      {
+                                      @Override
+                                      void repul()
+                                          {
+                                          System.out.println("Repül is");
+                                          }
+                                      }
+
+                                  class Pingvin extends Madar
+                                      {
+                                      }
+
+                                  class Liskov
+                                      {
+                                      public static void main(String[] args)
+                                          {
+                                          Madar madar=new Madar ();
+                                          madar.repul ();
+                                          madar=new Sas ();
+                                          madar.repul ();
+                                          madar=new Pingvin ();
+                                          madar.repul ();
+                                          }
+                                      }
+
+                             ]]></programlisting>
+               </para>
+        <para>
+            Itt látható a hibaüzenet:
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/javaliskov.png" width="100%"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+    </section>        
+
+    <section>
+        <title>
+            Szülő-gyerek
+        </title>
+        <para>
+            Írjunk Szülő-gyerek Java és C++ osztálydefiníciót, amelyben
+            demonstrálni tudjuk, hogy az ősön keresztül csak az ős üzenetei
+            küldhetőek!
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_1.pdf
+            (98. fólia)
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Liskov/Parentchild">Szülő-gyerek</link>
+        </para>
+            <para>
+                <programlisting language="c++" ><![CDATA[
+                #include <iostream>
+                using namespace std;
+
+                class Killer
+                    {
+                    public:
+                    void death(){};
+                    };
+
+                class SerialKiller : public Killer
+                    {
+                    public:
+                    void serialkillerdeath(){};
+                    };
+
+                int main(void)
+                    {
+                    Killer* killer;
+                    SerialKiller* serialkiller;
+
+                    (*serialkiller).death();
+                    (*serialkiller).serialkillerdeath();
+
+                    (*killer).death();
+
+                    std::cout << "Ééééés lefutott, megjött a gyilkos. :O" << endl;
+                    };]]></programlisting>
+            </para>
+            <para>
+                A fentebb látható kódcsipetben találhatunk 2 osztályt...Mégpedig
+                a <function>class Killer</function>, ami az ősünk(szülő) és van
+                egy másik a <function>class SerialKiller</function> ami pedig az
+                első osztálynak a gyermeke. A <function>class Killer</function>
+                bír valami tulajdonsággal/taggal, ezzel rendelkezni fog a
+                kiterjesztett gyermek osztályunk is.
+            </para>
+            <para>
+                A lényeg, hogy a gyermek osztályunk rendelkezik a szülő
+                tulajdonságaival/tagjaival, viszont a szülő már nem rendelkezik
+                a gyermekével.
+            </para>
+            <para>
+                És ezaláltal <programlisting><![CDATA[
+                (*serialkiller).death();
+                (*serialkiller).serialkillerdeath();
+
+                (*killer).death();]]></programlisting> a következő sorokban
+                lefuttatjuk saját metódusaikat, majd egymásét is. Így a
+                programunk lefut és megkapjuk a kiírásunkat.
+            </para>
+            <para>
+                Viszont, hogy rámutassunk arra, hogy a szülő nem tudja használni
+                a gyermek metódusát hozzá kell adnunk a programunkhoz ezt a sort:
+                <programlisting><![CDATA[(*killer).serialkillerdeath();]]></programlisting>
+                És így már hibaüzenetet fogunk kapni. Mégpedig:
+            </para>
+            <para>
+                   <mediaobject>
+                           <imageobject>
+                               <imagedata fileref= "pic/gyilkos.png" width="100%"/>
+                           </imageobject>
+                   </mediaobject>
+            </para>
+            <para>
+                Javában pedig ugyan ez a lényeg, és ugyan ezt is csináljuk,
+                csak nyilván a Java nyelv szintaxisának megfelelően.
+            </para>
+            <para>
+                <programlisting language="java" ><![CDATA[
+               class Killer
+                   {
+                   public void death ()
+                       {
+                       }
+                   };
+
+               class SerialKiller extends Killer
+                   {
+                   public void serialkillerdeath ()
+                       {
+                       }
+                   };
+
+               class Program
+                   {
+                   public static void main(String[] args)
+                       {
+                       Killer killer= new Killer ();
+                       SerialKiller serialkiller= new SerialKiller ();
+
+                       serialkiller.death ();
+                       serialkiller.serialkillerdeath ();
+
+                       killer.death ();
+
+                       //Az alsó sort kikommentelve, lefut a programunk, viszont ha nem kommenteljük ki, akkor ugyan olyan hibakódot kapunk
+                       // mint a C++ -os változatban.
+
+                       //killer.serialkiller();
+
+                       System.out.print("\"ÉÉéés hát itt is megjött a gyilkos. :O Javában is itt van :O\"");
+                       }
+                   };
+
+                ]]></programlisting>
+            </para>
+            
+            <para>
+                   <mediaobject>
+                           <imageobject>
+                               <imagedata fileref= "pic/gyilkosjava.png" width="100%"/>
+                           </imageobject>
+                   </mediaobject>
+            </para>
+    </section>        
+    
+    <section>
+        <title>
+            Anti OO
+        </title>
+        <para>
+            A BBP algoritmussal a Pi hexadecimális kifejtésének a 0. pozíciótól
+            számított 10^6, 10^7, 10^8 darab jegyét határozzuk meg C, C++, Java és
+            C# nyelveken és vessük össze a futási időket!
+            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/apas03.html#id561066
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="https://github.com/fulekylaszlo/Prog2/tree/master/source/2.Liskov/AntiOO">Anti-OO</link>
+        </para>
+        <para>
+            Ebben a feladatban egy már elővett feladatot(BBP) fogjuk továbbfejleszteni,
+            vagyis különbőző programozási nyelvek megírni, mint pl. a C#, Java és C.
+        </para>
+        <para>
+            Fölöslegesnek tartom bemásolni mind a 4 forráskódot, mivel kissebb-nagyobb
+            változtatásokat kellet csak csinálni ezért csak egy C++ és egy Java
+            kódot teszek be, hiszen a lényeg ugyan az maradt.
+            A C++ -os forráskód így néz ki:
+        </para>
+        <para>
+            <programlisting language="c++" ><![CDATA[
+            #include <iostream>
+            #include <math.h>
+            #include <time.h>
+            using namespace std;
+
+            long n16modk (int n, int k)
+                {
+                long r = 1;
+                int t = 1;
+                while (t <= n)
+                    t *= 2;
+
+                    if (n >= t)
+                    {
+                    r = (16 * r) % k;
+                    n = n - t;
+                    }
+
+                    t = t / 2;
+                if (t < 1)
+
+                    r = (r * r) % k;
+                return r;
+                }
+            double d16Sj (int d, int j)
+                {
+
+                double d16Sj = 0.0;
+                int k;
+
+                for (k = 0; k <= d; ++k)
+                    d16Sj += (double) n16modk (d - k, 8 * k + j) / (double) (8 * k + j);
+
+             
+                return d16Sj - floor (d16Sj);
+                }
+
+
+            int main ()
+                {
+
+                double d16Pi = 0.0;
+
+                double d16S1t = 0.0;
+                double d16S4t = 0.0;
+                double d16S5t = 0.0;
+                double d16S6t = 0.0;
+
+                int jegy;
+                int d;
+
+                clock_t delta = clock ();
+
+                for (d = 1000000; d < 1000001; ++d)
+                        {
+
+                        d16Pi = 0.0;
+
+                        d16S1t = d16Sj (d, 1);
+                        d16S4t = d16Sj (d, 4);
+                        d16S5t = d16Sj (d, 5);
+                        d16S6t = d16Sj (d, 6);
+
+                        d16Pi = 4.0 * d16S1t - 2.0 * d16S4t - d16S5t - d16S6t;
+
+                        d16Pi = d16Pi - floor (d16Pi);
+
+                        jegy = (int) floor (16.0 * d16Pi);
+
+                        }
+
+                std::cout << jegy << endl;
+                delta = clock () - delta;
+                std::cout << (double) delta / CLOCKS_PER_SEC << endl;
+                }
+           ]]></programlisting>
+        </para>
+        <para>
+            A különböző hatványokra való kiszámítást úgy tudjuk elérni, hogy a
+            "d" értékét növeljük arra a hatványszámra amit szeretnék kapni, így például:
+        </para>
+    <para>
+        Ha a 10^6 hatványára szeretnék kiszámolni, akkor a "d" értékünk így
+        fog kinézni:
+    </para>
+    <para>
+     <programlisting><![CDATA[
+    for (d = 1000000; d < 1000001; ++d)
+    ]]></programlisting>
+    </para>
+    
+        <para>
+            <programlisting language="java"><![CDATA[
+            /*
+             * PiBBPBench.java
+             *
+             * DIGIT 2005, Javat tanítok
+             * Bátfai Norbert, nbatfai@inf.unideb.hu
+             *
+             */
+            /**
+             * A PiBBP.java-ból kivettük az "objektumorientáltságot", így kaptuk
+             * ezt az osztályt.
+             *
+             * (A PiBBP osztály a BBP (Bailey-Borwein-Plouffe) algoritmust a Pi hexa
+             * jegyeinek számolását végző osztály. A könnyebb olvahatóság
+             * kedvéért a változó és metódus neveket megpróbáltuk az algoritmust
+             * bemutató [BBP ALGORITMUS] David H. Bailey: The BBP Algorithm for Pi.
+             * cikk jelöléseihez.)
+             *
+             * @author Bátfai Norbert, nbatfai@inf.unideb.hu
+             * @version 0.0.1
+             */
+            class PiBBPBench {
+                /**
+                 * BBP algoritmus a Pi-hez, a [BBP ALGORITMUS] David H. Bailey: The
+                 * BBP Algorithm for Pi. alapján a {16^d Sj} részlet kiszámítása.
+                 *
+                 * @param   d   a d+1. hexa jegytől számoljuk a hexa jegyeket
+                 * @param   j   Sj indexe
+                 */
+                public static double d16Sj(int d, int j) {
+                    
+                    double d16Sj = 0.0d;
+                    
+                    for(int k=0; k<=d; ++k)
+                        d16Sj += (double)n16modk(d-k, 8*k + j) / (double)(8*k + j);
+                    
+                    /* (bekapcsolva a sorozat elejen az első utáni jegyekben növeli pl.
+                        a pontosságot.)
+                    for(int k=d+1; k<=2*d; ++k)
+                        d16Sj += Math.pow(16.0d, d-k) / (double)(8*k + j);
+                     */
+                    
+                    return d16Sj - Math.floor(d16Sj);
+                }
+                /**
+                 * Bináris hatványozás mod k, a 16^n mod k kiszámítása.
+                 *
+                 * @param   n   kitevő
+                 * @param   k   modulus
+                 */
+                public static long n16modk(int n, int k) {
+                    
+                    int t = 1;
+                    while(t <= n)
+                        t *= 2;
+                    
+                    long r = 1;
+                    
+                    while(true) {
+                        
+                        if(n >= t) {
+                            r = (16*r) % k;
+                            n = n - t;
+                        }
+                        
+                        t = t/2;
+                        
+                        if(t < 1)
+                            break;
+                        
+                        r = (r*r) % k;
+                        
+                    }
+                    
+                    return r;
+                }
+                /**
+                 * A [BBP ALGORITMUS] David H. Bailey: The
+                 * BBP Algorithm for Pi. alapján a
+                 * {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}}
+                 * kiszámítása, a {} a törtrészt jelöli. A Pi hexa kifejtésében a
+                 * d+1. hexa jegytől
+                 */
+                public static void main(String args[]) {
+                    
+                    double d16Pi = 0.0d;
+                    
+                    double d16S1t = 0.0d;
+                    double d16S4t = 0.0d;
+                    double d16S5t = 0.0d;
+                    double d16S6t = 0.0d;
+                    
+                    int jegy = 0;
+                    
+                    long delta = System.currentTimeMillis();
+                    
+                    for(int d=1000000; d<1000001; ++d) {
+                        
+                        d16Pi = 0.0d;
+                        
+                        d16S1t = d16Sj(d, 1);
+                        d16S4t = d16Sj(d, 4);
+                        d16S5t = d16Sj(d, 5);
+                        d16S6t = d16Sj(d, 6);
+                        
+                        d16Pi = 4.0d*d16S1t - 2.0d*d16S4t - d16S5t - d16S6t;
+                        
+                        d16Pi = d16Pi - Math.floor(d16Pi);
+                        
+                        jegy = (int)Math.floor(16.0d*d16Pi);
+                        
+                    }
+                    
+                    System.out.println(jegy);
+                    delta = System.currentTimeMillis() - delta;
+                    System.out.println(delta/1000.0);
+                }
+            }
+            ]]></programlisting>
+        </para>
+            <para>
+                        <table frame="all">
+                           <title>Eredmények/Összehasonlítás</title>
+                           <tgroup cols="5">
+                               <colspec colname="a1" colnum="1" colwidth="1*"/>
+                               <colspec colname="a2" colnum="2" colwidth="1*"/>
+                               <colspec colname="a3" colnum="3" colwidth="1*"/>
+                               <colspec colname="a4" colnum="4" colwidth="1*"/>
+                               <colspec/>
+                               <thead>
+                                   <row>
+                                       <entry>Hatvány</entry>
+                                       <entry>C++</entry>
+                                       <entry>C</entry>
+                                       <entry>C#</entry>
+                                       <entry>Java</entry>
+                                   </row>
+                               </thead>
+                               <tbody>
+                                   <row>
+                                       <entry>6</entry>
+                                       <entry>0,187</entry>
+                                       <entry>2.286</entry>
+                                       <entry>2,334</entry>
+                                       <entry>2,435</entry>
+                                       <entry/>
+                                   </row>
+                                   <row>
+                                       <entry>7</entry>
+                                       <entry>2,136</entry>
+                                       <entry>26,831</entry>
+                                       <entry>25,073</entry>
+                                       <entry>23,377</entry>
+                                       <entry/>
+                                   </row>
+                                   <row>
+                                       <entry>8</entry>
+                                       <entry>24,90</entry>
+                                       <entry>309,862</entry>
+                                       <entry>315,438</entry>
+                                       <entry>280,178</entry>
+                                       <entry/>
+                                   </row>
+                               </tbody>
+                           </tgroup>
+                       </table>
+                   </para>
+
+    <para>
+        Az eredményeket elnézve, meglepődhetünk, hiszen énmagam is hasonló
+        eredményeket vártam mindegyik nyelvnél, kissebb eltérésekkel, viszont
+        észrevehetjük, hogy nálam a C++ -os verzió magasan üti az összes többit.
+        A többi között pedig minimális az eltérés. (Fontos megjegyezni, hogy én
+        MacOSX Mojave 10.14.6 -al dolgozom)
+    </para>
+    </section>
+    <section>
+        <title>
+            Hello, Android!
+        </title>
+        <para>
+            Élesszük fel az SMNIST for Humans projektet!
+            https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main
+            Apró módosításokat eszközölj benne, pl. színvilág.
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+    
+    <section>
+        <title>
+            Ciklomatikus komplexitás
+        </title>
+        <para>
+            Számoljuk ki valamelyik programunk függvényeinek ciklomatikus
+            komplexitását! Lásd a fogalom tekintetében a
+            https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_2.pdf
+            (77-79 fóliát)!
+        </para>
+        <para>
+            Megoldás forrása:<link xlink:href="http://www.lizard.ws/">Online
+                tool (Lizard code complexity analyzer)</link>
+        </para>
+        <para>
+            Először Thomas J. McCabe publikálta 1976-ban, ezért gyakran
+            McCabe-komplexitásnak is nevezik.
+        </para>
+        <para>
+            A ciklomatikus komplexitást ha egyszerűen szeretném elmagyarázni,
+            akkor annyit mondanék, hogy egy forráskód bonyolultságát/tagoltságát
+            számolja ki és adja vissza nekünk számokban.
+        </para>
+        <para>
+            Ha gráf szerint szeretnénk megtörténni, akkor így nézne ki egy átlagos
+            program gráfja:
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/komplexgraf.png" width="100%"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+        <para>
+            A program bonyolultságát másnéven "komplexitását" pedig különböző
+            fügvényekkel, ciklusokkal, operátorokkal tudjuk növelni.
+        </para>
+        <para>
+            Abban az esetben ha mi magunk szeretnénk kiszámolni egy program
+            komplexitását az alsó képlet szerint kell eljárnunk:
+        </para>
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/keplet.png" width="100%"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+        <para>
+            -E : A gráf éleinek száma
+        </para>
+        <para>
+            -N : A gráfban levő csúcsok száma
+        </para>
+        <para>
+            -P : Az összefüggő komponensek száma
+        </para>
+        <para>
+            Ha viszont nem szeretnénk manuálisan kiszámolni egy forráskód
+            komplexitását, akkor számos "online tool" található az interneten,
+            én is egy ilyet használtam(Lizard), a fentebb található linken el
+            is érhetjük a weboldalt.
+        </para>
+        <para>
+            Én az "Anti_OO" feladatban található C++ -os változatát számoltattam
+            ki, ami számítás után így néz ki:
+        </para>
+        
+        <para>
+               <mediaobject>
+                       <imageobject>
+                           <imagedata fileref= "pic/komplex.png" width="100%"/>
+                       </imageobject>
+               </mediaobject>
+        </para>
+    </section>
+                    
+</chapter>                
+
